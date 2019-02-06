@@ -3,7 +3,7 @@
           package="meugeninua.android.currencies">
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -23,7 +23,8 @@
             android:authorities="meugeninua.android.currencies"
             android:name=".model.CurrenciesProvider"
             android:exported="false"
-            android:enabled="true"/>
+            android:enabled="true"
+            android:syncable="true"/>
     </application>
 
 </manifest>

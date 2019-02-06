@@ -6,10 +6,9 @@ CREATE TABLE currencies (
 CREATE INDEX idx_currencies_name ON currencies (name);
 
 CREATE TABLE exchanges (
-  id INTEGER NOT NULL AUTOINCREMENT,
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
   currency_id INTEGER NOT NULL,
   exchange_date TIMESTAMP NOT NULL,
   exchange_rate NUMERIC NOT NULL,
-  FOREIGN KEY (currency_id) REFERENCES currencies (id),
-  PRIMARY KEY (id));
+  FOREIGN KEY (currency_id) REFERENCES currencies (id));
 CREATE INDEX idx_exchanges_date ON exchanges (exchange_date);
