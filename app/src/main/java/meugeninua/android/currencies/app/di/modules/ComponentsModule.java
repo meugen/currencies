@@ -2,7 +2,7 @@ package meugeninua.android.currencies.app.di.modules;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
-import meugeninua.android.currencies.model.CurrenciesProvider;
+import meugeninua.android.currencies.app.provider.CurrenciesProvider;
 import meugeninua.android.currencies.ui.activities.main.MainActivity;
 import meugeninua.android.currencies.ui.activities.main.MainActivityModule;
 

@@ -9,7 +9,7 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import meugeninua.android.currencies.app.CurrenciesApp;
-import meugeninua.android.currencies.model.CurrenciesOpenHelper;
+import meugeninua.android.currencies.app.db.CurrenciesOpenHelper;
 import meugeninua.android.currencies.app.di.qualifiers.AppContext;
 
 @Module

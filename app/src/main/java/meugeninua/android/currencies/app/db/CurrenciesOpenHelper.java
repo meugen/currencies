@@ -1,4 +1,4 @@
-package meugeninua.android.currencies.model;
+package meugeninua.android.currencies.app.db;
 
 import android.content.Context;
 import android.content.res.AssetManager;

@@ -1,4 +1,4 @@
-package meugeninua.android.currencies.model;
+package meugeninua.android.currencies.app.provider;
 
 import android.content.ContentProvider;
 import android.content.ContentResolver;
@@ -17,9 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import dagger.android.AndroidInjection;
 
-public class CurrenciesProvider extends ContentProvider {
-
-    private static final String AUTHORITY = "meugeninua.android.currencies";
+public class CurrenciesProvider extends ContentProvider implements Constants {
 
     private static final int MATCH_CURRENCIES = 1;
     private static final int MATCH_CURRENCY_ID = 2;
@@ -129,16 +127,16 @@ public class CurrenciesProvider extends ContentProvider {
 
         int code = matcher.match(uri);
         if (code == MATCH_CURRENCIES) {
-            database.insert("currencies", null, values);
+            database.insert(TBL_CURRENCIES, null, values);
             resultUri = Uri.parse(String.format(Locale.ENGLISH, "content://%s/currency/%d",
-                    AUTHORITY, values.getAsInteger("id")));
+                    AUTHORITY, values.getAsInteger(FLD_ID)));
             notifyChange(resultUri, Uri.parse(String.format("content://%s/currencies", AUTHORITY)));
         } else if (code == MATCH_EXCHANGES) {
-            long exchangeId = database.insert("exchanges", null, values);
+            long exchangeId = database.insert(TBL_EXCHANGES, null, values);
             resultUri = Uri.parse(String.format(Locale.ENGLISH, "content://%s/currency/%d/exchange/%d",
-                    AUTHORITY, values.getAsInteger("currency_id"), exchangeId));
+                    AUTHORITY, values.getAsInteger(FLD_CURRENCY_ID), exchangeId));
             notifyChange(resultUri, Uri.parse(String.format(Locale.ENGLISH, "content://%s/currency/%d/exchanges",
-                    AUTHORITY, values.getAsInteger("currency_id"))));
+                    AUTHORITY, values.getAsInteger(FLD_CURRENCY_ID))));
         }
         return resultUri;
     }
