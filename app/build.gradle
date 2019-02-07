@@ -26,11 +26,6 @@ dependencies {
     implementation "androidx.appcompat:appcompat:${versions.androidx}"
     implementation "androidx.recyclerview:recyclerview:${versions.androidx}"
 
-    /*implementation "com.google.dagger:dagger:${versions.dagger}"
-    annotationProcessor "com.google.dagger:dagger-compiler:${versions.dagger}"
-    implementation "com.google.dagger:dagger-android-support:${versions.dagger}"
-    annotationProcessor "com.google.dagger:dagger-android-processor:${versions.dagger}"*/
-
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
