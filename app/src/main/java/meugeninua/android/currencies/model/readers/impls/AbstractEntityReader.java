@@ -14,10 +14,10 @@ import meugeninua.android.currencies.model.readers.EntityReader;
 
 abstract class AbstractEntityReader<T> implements EntityReader<T> {
 
-    private final String rootName;
+    private final String tagName;
 
-    protected AbstractEntityReader(final String rootName) {
-        this.rootName = rootName;
+    AbstractEntityReader(final String tagName) {
+        this.tagName = tagName;
     }
 
     protected abstract T readOne(final XmlPullParser parser) throws XmlPullParserException, IOException;
@@ -42,7 +42,7 @@ abstract class AbstractEntityReader<T> implements EntityReader<T> {
             if (eventType == XmlPullParser.END_DOCUMENT) {
                 break;
             }
-            if (isValidStart(parser)) {
+            if (eventType == XmlPullParser.START_TAG && tagName.equals(parser.getName())) {
                 result.add(readOne(parser));
             }
         }

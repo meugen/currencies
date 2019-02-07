@@ -9,7 +9,7 @@ import android.os.Bundle;
 
 public class Authenticator extends AbstractAccountAuthenticator {
 
-    public Authenticator(final Context context) {
+    Authenticator(final Context context) {
         super(context);
     }
 

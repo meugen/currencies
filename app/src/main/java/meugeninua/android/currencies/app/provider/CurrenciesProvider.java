@@ -3,7 +3,9 @@ package meugeninua.android.currencies.app.provider;
 import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.UriMatcher;
+import android.content.pm.ProviderInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -11,11 +13,10 @@ import android.net.Uri;
 import java.util.List;
 import java.util.Locale;
 
-import javax.inject.Inject;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import dagger.android.AndroidInjection;
+import meugeninua.android.currencies.app.CurrenciesApp;
+import meugeninua.android.currencies.app.di.AppComponent;
 
 public class CurrenciesProvider extends ContentProvider implements Constants {
 
@@ -26,15 +27,20 @@ public class CurrenciesProvider extends ContentProvider implements Constants {
     private static final int MATCH_EXCHANGE_LATEST = 5;
     private static final int MATCH_EXCHANGE_DATE = 6;
 
-    @Inject
-    SQLiteDatabase database;
+    private SQLiteDatabase database;
 
     private UriMatcher matcher;
 
     @Override
-    public boolean onCreate() {
-        AndroidInjection.inject(this);
+    public void attachInfo(final Context context, final ProviderInfo info) {
+        AppComponent appComponent = CurrenciesApp.appComponent(context);
+        this.database = appComponent.provideDatabase();
 
+        super.attachInfo(context, info);
+    }
+
+    @Override
+    public boolean onCreate() {
         matcher = new UriMatcher(UriMatcher.NO_MATCH);
         matcher.addURI(AUTHORITY, "currencies", MATCH_CURRENCIES);
         matcher.addURI(AUTHORITY, "currency/#", MATCH_CURRENCY_ID);
@@ -76,7 +82,7 @@ public class CurrenciesProvider extends ContentProvider implements Constants {
 
     private Cursor queryCurrencyId(final Uri uri) {
         String id = uri.getLastPathSegment();
-        return database.rawQuery("SELECT * FROM currencies WHERE id=?", new String[] { id });
+        return database.rawQuery("SELECT * FROM currencies WHERE id=? LIMIT 1", new String[] { id });
     }
 
     private Cursor queryExchanges(final Uri uri) {
@@ -89,7 +95,7 @@ public class CurrenciesProvider extends ContentProvider implements Constants {
         List<String> pathSegments = uri.getPathSegments();
         String currencyId = pathSegments.get(1);
         String exchangeId = pathSegments.get(4);
-        return database.rawQuery("SELECT * FROM exchanges WHERE currency_id=? AND id=?",
+        return database.rawQuery("SELECT * FROM exchanges WHERE currency_id=? AND id=? LIMIT 1",
                 new String[] { currencyId, exchangeId });
     }
 
@@ -102,7 +108,7 @@ public class CurrenciesProvider extends ContentProvider implements Constants {
     private Cursor queryExchangeByDate(final Uri uri) {
         String id = uri.getPathSegments().get(1);
         String date = uri.getPathSegments().get(4);
-        return database.rawQuery("SELECT * FROM exchanges WHERE currency_id=? AND exchange_date=?",
+        return database.rawQuery("SELECT * FROM exchanges WHERE currency_id=? AND exchange_date=? LIMIT 1",
                 new String[] { id, date });
     }
 

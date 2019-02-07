@@ -20,7 +20,7 @@ public class CurrencyExchangePairReader extends AbstractEntityReader<Pair<Curren
     private static final String EXCHANGE_DATE_TAG = "exchangedate";
 
     public CurrencyExchangePairReader() {
-        super("exchange");
+        super(CURRENCY_TAG);
     }
 
     @Override

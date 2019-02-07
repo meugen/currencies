@@ -6,16 +6,14 @@ import android.content.ContentResolver;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
-import javax.inject.Inject;
-
 import meugeninua.android.currencies.R;
+import meugeninua.android.currencies.app.di.AppComponent;
 import meugeninua.android.currencies.app.provider.Constants;
 import meugeninua.android.currencies.ui.activities.base.BaseActivity;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements Constants {
 
-    @Inject
-    SQLiteDatabase database;
+    private SQLiteDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,8 +22,14 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
     }
 
+    @Override
+    protected void inject(final AppComponent appComponent) {
+        super.inject(appComponent);
+        this.database = appComponent.provideDatabase();
+    }
+
     private void setupSync() {
-        Account account = new Account(Constants.ACCOUNT_TYPE, Constants.ACCOUNT);
+        Account account = new Account(ACCOUNT, ACCOUNT_TYPE);
         AccountManager manager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
         manager.addAccountExplicitly(account, null, null);
 

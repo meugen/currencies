@@ -1,19 +1,21 @@
 package meugeninua.android.currencies.app.di;
 
-import javax.inject.Singleton;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Pair;
 
-import dagger.Component;
-import dagger.android.AndroidInjector;
-import dagger.android.support.AndroidSupportInjectionModule;
-import meugeninua.android.currencies.app.CurrenciesApp;
-import meugeninua.android.currencies.app.di.modules.AppModule;
-import meugeninua.android.currencies.app.di.modules.ComponentsModule;
+import meugeninua.android.currencies.model.dao.CurrencyDao;
+import meugeninua.android.currencies.model.dao.ExchangeDao;
+import meugeninua.android.currencies.model.db.entities.Currency;
+import meugeninua.android.currencies.model.db.entities.Exchange;
+import meugeninua.android.currencies.model.readers.EntityReader;
 
-@Component(modules = { AndroidSupportInjectionModule.class,
-        ComponentsModule.class, AppModule.class })
-@Singleton
-public interface AppComponent extends AndroidInjector<CurrenciesApp> {
+public interface AppComponent {
 
-    @Component.Builder
-    abstract class Builder extends AndroidInjector.Builder<CurrenciesApp> {}
+    SQLiteDatabase provideDatabase();
+
+    EntityReader<Pair<Currency, Exchange>> provideCurrencyExchangePairReader();
+
+    CurrencyDao provideCurrencyDao();
+
+    ExchangeDao provideExchangeDao();
 }

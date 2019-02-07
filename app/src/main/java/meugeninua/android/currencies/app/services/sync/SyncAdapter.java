@@ -9,12 +9,8 @@ import android.os.Bundle;
 
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
-    public SyncAdapter(final Context context, final boolean autoInitialize) {
+    SyncAdapter(final Context context, final boolean autoInitialize) {
         super(context, autoInitialize);
-    }
-
-    public SyncAdapter(final Context context, final boolean autoInitialize, final boolean allowParallelSyncs) {
-        super(context, autoInitialize, allowParallelSyncs);
     }
 
     @Override

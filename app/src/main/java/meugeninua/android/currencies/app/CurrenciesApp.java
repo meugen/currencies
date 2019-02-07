@@ -1,50 +1,61 @@
 package meugeninua.android.currencies.app;
 
-import android.app.Activity;
 import android.app.Application;
-import android.content.ContentProvider;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Pair;
 
-import javax.inject.Inject;
+import meugeninua.android.currencies.app.di.AppComponent;
+import meugeninua.android.currencies.model.dao.CurrencyDao;
+import meugeninua.android.currencies.model.dao.ExchangeDao;
+import meugeninua.android.currencies.model.dao.impls.CurrencyDaoImpl;
+import meugeninua.android.currencies.model.dao.impls.ExchangeDaoImpl;
+import meugeninua.android.currencies.model.db.CurrenciesOpenHelper;
+import meugeninua.android.currencies.model.db.entities.Currency;
+import meugeninua.android.currencies.model.db.entities.Exchange;
+import meugeninua.android.currencies.model.readers.EntityReader;
+import meugeninua.android.currencies.model.readers.impls.CurrencyExchangePairReader;
 
-import androidx.annotation.MainThread;
-import dagger.android.AndroidInjector;
-import dagger.android.DispatchingAndroidInjector;
-import dagger.android.HasActivityInjector;
-import dagger.android.HasContentProviderInjector;
-import meugeninua.android.currencies.app.di.DaggerAppComponent;
+public class CurrenciesApp extends Application implements AppComponent {
 
-public class CurrenciesApp extends Application implements HasActivityInjector, HasContentProviderInjector {
-
-    @Inject
-    DispatchingAndroidInjector<Activity> activityInjector;
-    @Inject
-    DispatchingAndroidInjector<ContentProvider> contentProviderInjector;
-
-    private boolean needToInject = true;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        injectIfNeeded();
+    public static AppComponent appComponent(final Context context) {
+        return (AppComponent) context.getApplicationContext();
     }
 
-    @MainThread
-    private void injectIfNeeded() {
-        if (needToInject) {
-            DaggerAppComponent.builder()
-                    .create(this).inject(this);
-            needToInject = false;
+    private SQLiteDatabase database;
+    private EntityReader<Pair<Currency, Exchange>> currencyExchangePairReader;
+    private CurrencyDao currencyDao;
+    private ExchangeDao exchangeDao;
+
+    @Override
+    public SQLiteDatabase provideDatabase() {
+        if (database == null) {
+            database = new CurrenciesOpenHelper(this).getWritableDatabase();
         }
+        return database;
     }
 
     @Override
-    public AndroidInjector<Activity> activityInjector() {
-        return activityInjector;
+    public EntityReader<Pair<Currency, Exchange>> provideCurrencyExchangePairReader() {
+        if (currencyExchangePairReader == null) {
+            currencyExchangePairReader = new CurrencyExchangePairReader();
+        }
+        return currencyExchangePairReader;
     }
 
     @Override
-    public AndroidInjector<ContentProvider> contentProviderInjector() {
-        injectIfNeeded();
-        return contentProviderInjector;
+    public CurrencyDao provideCurrencyDao() {
+        if (currencyDao == null) {
+            currencyDao = new CurrencyDaoImpl(getContentResolver());
+        }
+        return currencyDao;
+    }
+
+    @Override
+    public ExchangeDao provideExchangeDao() {
+        if (exchangeDao == null) {
+            exchangeDao = new ExchangeDaoImpl(getContentResolver());
+        }
+        return exchangeDao;
     }
 }
