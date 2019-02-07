@@ -1,4 +1,4 @@
-package meugeninua.android.currencies.model;
+package meugeninua.android.currencies.model.db.entities;
 
 public class Currency {
 
