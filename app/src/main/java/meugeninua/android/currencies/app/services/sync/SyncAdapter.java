@@ -19,13 +19,10 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.text.DateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import meugeninua.android.currencies.R;
-import meugeninua.android.currencies.app.CurrenciesApp;
 import meugeninua.android.currencies.app.di.AppComponent;
 import meugeninua.android.currencies.model.dao.CurrencyDao;
 import meugeninua.android.currencies.model.dao.ExchangeDao;
@@ -33,7 +30,6 @@ import meugeninua.android.currencies.model.db.entities.Currency;
 import meugeninua.android.currencies.model.db.entities.Exchange;
 import meugeninua.android.currencies.model.readers.EntityReader;
 import okhttp3.Call;
-import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;

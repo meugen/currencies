@@ -1,7 +1,5 @@
 package meugeninua.android.currencies.app.conf;
 
-import java.util.logging.Logger;
-
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 
