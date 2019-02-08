@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.IBinder;
 
 import androidx.annotation.Nullable;
+import meugeninua.android.currencies.app.CurrenciesApp;
 
 public class SyncService extends Service {
 
@@ -17,7 +18,7 @@ public class SyncService extends Service {
 
         synchronized (LOCK) {
             if (syncAdapter == null) {
-                syncAdapter = new SyncAdapter(this, true);
+                syncAdapter = new SyncAdapter(CurrenciesApp.appComponent(this));
             }
         }
     }

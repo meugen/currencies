@@ -24,11 +24,6 @@ public class CurrencyExchangePairReader extends AbstractEntityReader<Pair<Curren
     }
 
     @Override
-    protected boolean isValidStart(final XmlPullParser parser) throws XmlPullParserException {
-        return parser.getEventType() == XmlPullParser.START_TAG && CURRENCY_TAG.equals(parser.getName());
-    }
-
-    @Override
     protected Pair<Currency, Exchange> readOne(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, null, CURRENCY_TAG);
 

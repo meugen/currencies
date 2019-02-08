@@ -33,7 +33,9 @@ public class MainActivity extends BaseActivity implements Constants {
         AccountManager manager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
         manager.addAccountExplicitly(account, null, null);
 
-        ContentResolver.addPeriodicSync(account, Constants.AUTHORITY,
-                Bundle.EMPTY, Constants.SYNC_INTERVAL);
+        ContentResolver.setIsSyncable(account, AUTHORITY, 1);
+        ContentResolver.setSyncAutomatically(account, AUTHORITY, true);
+        ContentResolver.addPeriodicSync(account, AUTHORITY,
+                Bundle.EMPTY, SYNC_INTERVAL);
     }
 }

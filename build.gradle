@@ -16,7 +16,7 @@ buildscript {
 
 ext.versions = [
         'androidx': '1.0.0',
-        'dagger': '2.21'
+        'okhttp': '3.13.1'
 ]
 
 allprojects {

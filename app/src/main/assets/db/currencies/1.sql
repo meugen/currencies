@@ -11,4 +11,4 @@ CREATE TABLE exchanges (
   exchange_date TIMESTAMP NOT NULL,
   exchange_rate NUMERIC NOT NULL,
   FOREIGN KEY (currency_id) REFERENCES currencies (id));
-CREATE INDEX idx_exchanges_date ON exchanges (exchange_date);
+CREATE UNIQUE INDEX idx_exchanges_currency_date ON exchanges (currency_id, exchange_date);

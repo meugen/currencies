@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Pair;
 
+import meugeninua.android.currencies.app.conf.BuildConfigurator;
 import meugeninua.android.currencies.app.di.AppComponent;
 import meugeninua.android.currencies.model.dao.CurrencyDao;
 import meugeninua.android.currencies.model.dao.ExchangeDao;
@@ -15,6 +16,7 @@ import meugeninua.android.currencies.model.db.entities.Currency;
 import meugeninua.android.currencies.model.db.entities.Exchange;
 import meugeninua.android.currencies.model.readers.EntityReader;
 import meugeninua.android.currencies.model.readers.impls.CurrencyExchangePairReader;
+import okhttp3.OkHttpClient;
 
 public class CurrenciesApp extends Application implements AppComponent {
 
@@ -26,6 +28,12 @@ public class CurrenciesApp extends Application implements AppComponent {
     private EntityReader<Pair<Currency, Exchange>> currencyExchangePairReader;
     private CurrencyDao currencyDao;
     private ExchangeDao exchangeDao;
+    private OkHttpClient okHttpClient;
+
+    @Override
+    public Context provideAppContext() {
+        return this;
+    }
 
     @Override
     public SQLiteDatabase provideDatabase() {
@@ -57,5 +65,19 @@ public class CurrenciesApp extends Application implements AppComponent {
             exchangeDao = new ExchangeDaoImpl(getContentResolver());
         }
         return exchangeDao;
+    }
+
+    @Override
+    public OkHttpClient provideOkHttpClient() {
+        if (okHttpClient == null) {
+            okHttpClient = createOkHttpClient();
+        }
+        return okHttpClient;
+    }
+
+    private OkHttpClient createOkHttpClient() {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        BuildConfigurator.configureOkHttpClient(builder);
+        return builder.build();
     }
 }

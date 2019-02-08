@@ -133,12 +133,12 @@ public class CurrenciesProvider extends ContentProvider implements Constants {
 
         int code = matcher.match(uri);
         if (code == MATCH_CURRENCIES) {
-            database.insert(TBL_CURRENCIES, null, values);
+            database.insertWithOnConflict(TBL_CURRENCIES, null, values, SQLiteDatabase.CONFLICT_REPLACE);
             resultUri = Uri.parse(String.format(Locale.ENGLISH, "content://%s/currency/%d",
                     AUTHORITY, values.getAsInteger(FLD_ID)));
             notifyChange(resultUri, Uri.parse(String.format("content://%s/currencies", AUTHORITY)));
         } else if (code == MATCH_EXCHANGES) {
-            long exchangeId = database.insert(TBL_EXCHANGES, null, values);
+            long exchangeId = database.insertWithOnConflict(TBL_EXCHANGES, null, values, SQLiteDatabase.CONFLICT_REPLACE);
             resultUri = Uri.parse(String.format(Locale.ENGLISH, "content://%s/currency/%d/exchange/%d",
                     AUTHORITY, values.getAsInteger(FLD_CURRENCY_ID), exchangeId));
             notifyChange(resultUri, Uri.parse(String.format(Locale.ENGLISH, "content://%s/currency/%d/exchanges",

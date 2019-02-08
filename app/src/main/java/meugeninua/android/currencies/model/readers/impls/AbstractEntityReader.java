@@ -22,30 +22,52 @@ abstract class AbstractEntityReader<T> implements EntityReader<T> {
 
     protected abstract T readOne(final XmlPullParser parser) throws XmlPullParserException, IOException;
 
-    protected abstract boolean isValidStart(final XmlPullParser parser) throws XmlPullParserException;
-
     @Override
     public T readOne(final Reader reader) throws XmlPullParserException, IOException {
-        XmlPullParser parser = Xml.newPullParser();
-        parser.setInput(reader);
-        return readOne(parser);
+        StoreEntityReadListenerImpl<T> listener = new StoreEntityReadListenerImpl<>();
+        readOne(reader, listener);
+        return listener.result.isEmpty() ? null : listener.result.get(0);
     }
 
     @Override
     public List<T> readList(final Reader reader) throws XmlPullParserException, IOException {
+        StoreEntityReadListenerImpl<T> listener = new StoreEntityReadListenerImpl<>();
+        readList(reader, listener);
+        return listener.result;
+    }
+
+    @Override
+    public void readOne(Reader reader, OnEntityReadListener<T> listener) throws XmlPullParserException, IOException {
+        XmlPullParser parser = Xml.newPullParser();
+        parser.setInput(reader);
+        listener.onEntityRead(readOne(parser));
+    }
+
+    @Override
+    public void readList(Reader reader, OnEntityReadListener<T> listener) throws XmlPullParserException, IOException {
         XmlPullParser parser = Xml.newPullParser();
         parser.setInput(reader);
 
-        final List<T> result = new ArrayList<>();
-        while (true) {
+        boolean isContinue = true;
+        while (isContinue) {
             int eventType = parser.next();
             if (eventType == XmlPullParser.END_DOCUMENT) {
                 break;
             }
             if (eventType == XmlPullParser.START_TAG && tagName.equals(parser.getName())) {
-                result.add(readOne(parser));
+                isContinue = listener.onEntityRead(readOne(parser));
             }
         }
-        return result;
+    }
+
+    private static class StoreEntityReadListenerImpl<T> implements OnEntityReadListener<T> {
+
+        final List<T> result = new ArrayList<>();
+
+        @Override
+        public boolean onEntityRead(T entity) {
+            result.add(entity);
+            return true;
+        }
     }
 }
