@@ -100,6 +100,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     private boolean processPair(final Pair<Currency, Exchange> pair, final SyncResult syncResult) {
         syncResult.stats.numInserts += currencyDao.putCurrencies(pair.first);
         syncResult.stats.numInserts += exchangeDao.putExchanges(pair.first.id, pair.second);
-        return Thread.interrupted();
+        return !Thread.interrupted();
     }
 }
