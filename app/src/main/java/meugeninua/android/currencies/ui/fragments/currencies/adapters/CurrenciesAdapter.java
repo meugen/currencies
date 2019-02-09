@@ -17,17 +17,28 @@ import meugeninua.android.currencies.ui.fragments.base.adapters.CursorAdapter;
 
 public class CurrenciesAdapter extends CursorAdapter<Currency, CurrenciesAdapter.CurrencyHolder> {
 
-    public CurrenciesAdapter(final Context context, final EntityMapper<Currency> converter) {
+    private final OnCurrencyClickListener listener;
+
+    public CurrenciesAdapter(
+            final Context context,
+            final EntityMapper<Currency> converter,
+            final OnCurrencyClickListener listener) {
         super(context, converter, new ItemCallbackImpl());
+        this.listener = listener;
     }
 
     @Override
-    protected CurrencyHolder createViewHolder(final LayoutInflater inflater, final ViewGroup parent) {
-        return new CurrencyHolder(inflater.inflate(R.layout.item_currency, parent, false));
+    protected CurrencyHolder createViewHolder(
+            final LayoutInflater inflater,
+            final ViewGroup parent) {
+        View view = inflater.inflate(R.layout.item_currency, parent, false);
+        return new CurrencyHolder(view, listener);
     }
 
     @Override
-    protected void bindViewHolder(final CurrencyHolder holder, final Currency entity) {
+    protected void bindViewHolder(
+            final CurrencyHolder holder,
+            final Currency entity) {
         holder.bind(entity);
     }
 
@@ -36,13 +47,18 @@ public class CurrenciesAdapter extends CursorAdapter<Currency, CurrenciesAdapter
         private final TextView codeView;
         private final TextView nameView;
 
-        CurrencyHolder(@NonNull final View itemView) {
+        private Currency currency;
+
+        CurrencyHolder(@NonNull final View itemView, final OnCurrencyClickListener listener) {
             super(itemView);
             this.codeView = itemView.findViewById(R.id.currency_code);
             this.nameView = itemView.findViewById(R.id.currency_name);
+
+            itemView.setOnClickListener(v -> listener.onCurrencyClick(currency));
         }
 
         void bind(final Currency currency) {
+            this.currency = currency;
             codeView.setText(currency.code);
             nameView.setText(currency.name);
         }
@@ -63,5 +79,10 @@ public class CurrenciesAdapter extends CursorAdapter<Currency, CurrenciesAdapter
                 @NonNull final Currency newItem) {
             return ObjectsCompat.equals(oldItem, newItem);
         }
+    }
+
+    public interface OnCurrencyClickListener {
+
+        void onCurrencyClick(Currency currency);
     }
 }

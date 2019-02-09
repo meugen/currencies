@@ -23,12 +23,14 @@ public class CurrenciesBindingImpl extends BaseBinding implements CurrenciesBind
     }
 
     @Override
-    public void setupRecycler(final EntityMapper<Currency> currencyMapper) {
+    public void setupRecycler(
+            final EntityMapper<Currency> currencyMapper,
+            final CurrenciesAdapter.OnCurrencyClickListener listener) {
         RecyclerView recycler = get(R.id.recycler);
         recycler.setLayoutManager(new LinearLayoutManager(context));
         recycler.addItemDecoration(new DividerItemDecoration(context,
                 DividerItemDecoration.VERTICAL));
-        adapter = new CurrenciesAdapter(context, currencyMapper);
+        adapter = new CurrenciesAdapter(context, currencyMapper, listener);
         recycler.setAdapter(adapter);
     }
 

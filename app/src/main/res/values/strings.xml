@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">CurrenciesApp</string>
+
+    <string name="currency_details_currency_code">Currency code</string>
+    <string name="currency_details_currency_name">Currency name</string>
+    <string name="currency_details_exchange_date">Exchange date</string>
+    <string name="currency_details_exchange_rate">Exchage rate</string>
 </resources>

@@ -15,12 +15,24 @@
         android:theme="@style/AppTheme"
         android:name=".app.CurrenciesApp">
 
-        <activity android:name=".ui.activities.main.MainActivity">
+        <activity
+            android:name=".ui.activities.currencies.CurrenciesActivity"
+            android:launchMode="singleTop">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.activities.currencydetails.CurrencyDetailsActivity"
+            android:parentActivityName=".ui.activities.currencies.CurrenciesActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.currencies.CurrenciesActivity"/>
         </activity>
 
         <provider

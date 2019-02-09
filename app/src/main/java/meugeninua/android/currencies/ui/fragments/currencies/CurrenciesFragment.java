@@ -1,5 +1,6 @@
 package meugeninua.android.currencies.ui.fragments.currencies;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,12 +19,26 @@ import meugeninua.android.currencies.app.provider.Constants;
 import meugeninua.android.currencies.model.db.entities.Currency;
 import meugeninua.android.currencies.model.mappers.EntityMapper;
 import meugeninua.android.currencies.ui.fragments.base.BaseFragment;
+import meugeninua.android.currencies.ui.fragments.currencies.adapters.CurrenciesAdapter;
 import meugeninua.android.currencies.ui.fragments.currencies.binding.CurrenciesBinding;
 import meugeninua.android.currencies.ui.fragments.currencies.binding.CurrenciesBindingImpl;
 
 public class CurrenciesFragment extends BaseFragment<CurrenciesBinding> {
 
     private EntityMapper<Currency> currencyMapper;
+    private CurrenciesAdapter.OnCurrencyClickListener listener;
+
+    @Override
+    public void onAttach(final Context context) {
+        super.onAttach(context);
+        listener = (CurrenciesAdapter.OnCurrencyClickListener) context;
+    }
+
+    @Override
+    public void onDetach() {
+        listener = null;
+        super.onDetach();
+    }
 
     @Nullable
     @Override
@@ -31,13 +46,14 @@ public class CurrenciesFragment extends BaseFragment<CurrenciesBinding> {
             @NonNull final LayoutInflater inflater,
             @Nullable final ViewGroup container,
             @Nullable final Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_currencies, container);
+        return inflater.inflate(R.layout.fragment_currencies, container, false);
     }
 
     @Override
-    public void onActivityCreated(@Nullable final Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        LoaderManager.getInstance(this).restartLoader(0, Bundle.EMPTY, new CurrenciesCallback());
+    public void onStart() {
+        super.onStart();
+        LoaderManager.getInstance(this).restartLoader(0,
+                Bundle.EMPTY, new CurrenciesCallback());
     }
 
     @Override
@@ -45,7 +61,7 @@ public class CurrenciesFragment extends BaseFragment<CurrenciesBinding> {
             @NonNull final View view,
             @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.setupRecycler(currencyMapper);
+        binding.setupRecycler(currencyMapper, listener);
     }
 
     @Override

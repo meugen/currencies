@@ -1,4 +1,4 @@
-package meugeninua.android.currencies.ui.activities.main;
+package meugeninua.android.currencies.ui.activities.currencies;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -11,9 +11,13 @@ import meugeninua.android.currencies.app.di.AppComponent;
 import meugeninua.android.currencies.app.provider.Constants;
 import meugeninua.android.currencies.model.dao.CurrencyDao;
 import meugeninua.android.currencies.model.dao.ExchangeDao;
+import meugeninua.android.currencies.model.db.entities.Currency;
 import meugeninua.android.currencies.ui.activities.base.BaseActivity;
+import meugeninua.android.currencies.ui.activities.currencydetails.CurrencyDetailsActivity;
+import meugeninua.android.currencies.ui.fragments.currencies.adapters.CurrenciesAdapter;
 
-public class MainActivity extends BaseActivity implements Constants {
+public class CurrenciesActivity extends BaseActivity implements Constants,
+        CurrenciesAdapter.OnCurrencyClickListener {
 
     private SQLiteDatabase database;
     private CurrencyDao currencyDao;
@@ -23,7 +27,7 @@ public class MainActivity extends BaseActivity implements Constants {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupSync();
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_currencies);
     }
 
     @Override
@@ -32,6 +36,11 @@ public class MainActivity extends BaseActivity implements Constants {
         this.database = appComponent.provideDatabase();
         this.currencyDao = appComponent.provideCurrencyDao();
         this.exchangeDao = appComponent.provideExchangeDao();
+    }
+
+    @Override
+    public void onCurrencyClick(final Currency currency) {
+        startActivity(CurrencyDetailsActivity.build(this, currency.id));
     }
 
     private void setupSync() {

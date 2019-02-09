@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="?attr/listPreferredItemHeight"
     android:weightSum="1.0"
-    android:padding="@dimen/default_padding">
+    android:padding="@dimen/default_padding"
+    android:background="?attr/selectableItemBackground">
 
     <TextView
         android:id="@+id/currency_code"

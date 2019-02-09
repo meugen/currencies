@@ -26,6 +26,7 @@ public class CurrenciesProvider extends ContentProvider implements Constants {
     private static final int MATCH_EXCHANGE_ID = 4;
     private static final int MATCH_EXCHANGE_LATEST = 5;
     private static final int MATCH_EXCHANGE_DATE = 6;
+    private static final int MATCH_EXCHANGE_DATES = 7;
 
     private SQLiteDatabase database;
 
@@ -48,6 +49,7 @@ public class CurrenciesProvider extends ContentProvider implements Constants {
         matcher.addURI(AUTHORITY, "currency/#/exchange/id/#", MATCH_EXCHANGE_ID);
         matcher.addURI(AUTHORITY, "currency/#/exchange/latest", MATCH_EXCHANGE_LATEST);
         matcher.addURI(AUTHORITY, "currency/#/exchange/date/*", MATCH_EXCHANGE_DATE);
+        matcher.addURI(AUTHORITY, "currency/#/exchange/dates", MATCH_EXCHANGE_DATES);
         return true;
     }
 
@@ -72,6 +74,8 @@ public class CurrenciesProvider extends ContentProvider implements Constants {
             cursor = queryLatestExchange(uri);
         } else if (code == MATCH_EXCHANGE_DATE) {
             cursor = queryExchangeByDate(uri);
+        } else if (code == MATCH_EXCHANGE_DATES) {
+            cursor = queryExchangeDates(uri);
         }
         return cursor;
     }
@@ -101,7 +105,9 @@ public class CurrenciesProvider extends ContentProvider implements Constants {
 
     private Cursor queryExchanges(final Uri uri) {
         String id = uri.getPathSegments().get(1);
-        Cursor cursor = database.rawQuery("SELECT * FROM exchanges WHERE currency_id=? ORDER BY exchange_date DESC",
+        Cursor cursor = database.rawQuery("SELECT e.currency_id, e.exchange_date, e.exchange_rate," +
+                        " c.id, c.name, c.code FROM exchanges e INNER JOIN currencies c ON (c.id=e.currency_id)" +
+                        " WHERE e.currency_id=? ORDER BY e.exchange_date DESC",
                 new String[] { id });
         setExchangesNotification(cursor, id);
         return cursor;
@@ -111,7 +117,9 @@ public class CurrenciesProvider extends ContentProvider implements Constants {
         List<String> pathSegments = uri.getPathSegments();
         String currencyId = pathSegments.get(1);
         String exchangeId = pathSegments.get(4);
-        Cursor cursor = database.rawQuery("SELECT * FROM exchanges WHERE currency_id=? AND id=? LIMIT 1",
+        Cursor cursor = database.rawQuery("SELECT e.currency_id, e.exchange_date, e.exchange_rate," +
+                        " c.id, c.name, c.code FROM exchanges e INNER JOIN currencies c ON (c.id=e.currency_id)" +
+                        " WHERE e.currency_id=? AND e.id=? LIMIT 1",
                 new String[] { currencyId, exchangeId });
         setExchangesNotification(cursor, currencyId);
         return cursor;
@@ -119,7 +127,9 @@ public class CurrenciesProvider extends ContentProvider implements Constants {
 
     private Cursor queryLatestExchange(final Uri uri) {
         String id = uri.getPathSegments().get(1);
-        Cursor cursor = database.rawQuery("SELECT * FROM exchanges WHERE currency_id=? ORDER BY exchange_date DESC LIMIT 1",
+        Cursor cursor = database.rawQuery("SELECT e.currency_id, e.exchange_date, e.exchange_rate," +
+                        " c.id, c.name, c.code FROM exchanges e INNER JOIN currencies c ON (c.id=e.currency_id)" +
+                        " WHERE e.currency_id=? ORDER BY e.id DESC LIMIT 1",
                 new String[] { id });
         setExchangesNotification(cursor, id);
         return cursor;
@@ -128,8 +138,18 @@ public class CurrenciesProvider extends ContentProvider implements Constants {
     private Cursor queryExchangeByDate(final Uri uri) {
         String id = uri.getPathSegments().get(1);
         String date = uri.getPathSegments().get(4);
-        Cursor cursor = database.rawQuery("SELECT * FROM exchanges WHERE currency_id=? AND exchange_date=? LIMIT 1",
+        Cursor cursor = database.rawQuery("SELECT e.currency_id, e.exchange_date, e.exchange_rate," +
+                        " c.id, c.name, c.code FROM exchanges e INNER JOIN currencies c ON (c.id=e.currency_id)" +
+                        " WHERE e.currency_id=? AND e.exchange_date=? LIMIT 1",
                 new String[] { id, date });
+        setExchangesNotification(cursor, id);
+        return cursor;
+    }
+
+    private Cursor queryExchangeDates(final Uri uri) {
+        String id = uri.getPathSegments().get(1);
+        Cursor cursor = database.rawQuery("SELECT DISTINCT exchange_date FROM exchanges WHERE currency_id=?",
+                new String[] { id });
         setExchangesNotification(cursor, id);
         return cursor;
     }
@@ -142,7 +162,9 @@ public class CurrenciesProvider extends ContentProvider implements Constants {
         int code = matcher.match(uri);
         if (code == MATCH_CURRENCIES || code == MATCH_CURRENCY_ID) {
             type = "currency";
-        } else if (code == MATCH_EXCHANGES || code == MATCH_EXCHANGE_DATE || code == MATCH_EXCHANGE_LATEST) {
+        } else if (code == MATCH_EXCHANGES || code == MATCH_EXCHANGE_DATE
+                || code == MATCH_EXCHANGE_LATEST || code == MATCH_EXCHANGE_ID
+                || code == MATCH_EXCHANGE_DATES) {
             type = "exchange";
         }
         return type;
