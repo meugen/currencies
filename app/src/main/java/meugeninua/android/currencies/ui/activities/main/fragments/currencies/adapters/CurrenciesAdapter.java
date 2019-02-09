@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.util.ObjectsCompat;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import meugeninua.android.currencies.R;
 import meugeninua.android.currencies.model.mappers.EntityMapper;
@@ -16,7 +18,7 @@ import meugeninua.android.currencies.ui.activities.base.fragments.base.adapters.
 public class CurrenciesAdapter extends CursorAdapter<Currency, CurrenciesAdapter.CurrencyHolder> {
 
     public CurrenciesAdapter(final Context context, final EntityMapper<Currency> converter) {
-        super(context, converter);
+        super(context, converter, new ItemCallbackImpl());
     }
 
     @Override
@@ -43,6 +45,23 @@ public class CurrenciesAdapter extends CursorAdapter<Currency, CurrenciesAdapter
         void bind(final Currency currency) {
             codeView.setText(currency.code);
             nameView.setText(currency.name);
+        }
+    }
+
+    static class ItemCallbackImpl extends DiffUtil.ItemCallback<Currency> {
+
+        @Override
+        public boolean areItemsTheSame(
+                @NonNull final Currency oldItem,
+                @NonNull final Currency newItem) {
+            return oldItem.id == newItem.id;
+        }
+
+        @Override
+        public boolean areContentsTheSame(
+                @NonNull final Currency oldItem,
+                @NonNull final Currency newItem) {
+            return ObjectsCompat.equals(oldItem, newItem);
         }
     }
 }

@@ -37,7 +37,7 @@ public class CurrenciesFragment extends BaseFragment<CurrenciesBinding> {
     @Override
     public void onActivityCreated(@Nullable final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        LoaderManager.getInstance(this).initLoader(0, Bundle.EMPTY, new CurrenciesCallback());
+        LoaderManager.getInstance(this).restartLoader(0, Bundle.EMPTY, new CurrenciesCallback());
     }
 
     @Override
