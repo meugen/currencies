@@ -9,18 +9,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import meugeninua.android.currencies.app.provider.Constants;
+import meugeninua.android.currencies.model.converters.EntityConverter;
 
 abstract class AbstractDaoImpl<T> implements Constants {
 
     private final ContentResolver resolver;
+    private final EntityConverter<T> converter;
 
-    AbstractDaoImpl(final ContentResolver resolver) {
+    AbstractDaoImpl(final ContentResolver resolver, final EntityConverter<T> converter) {
         this.resolver = resolver;
+        this.converter = converter;
     }
-
-    abstract T cursorToEntity(final Cursor cursor);
-
-    abstract ContentValues entityToValues(final T entity);
 
     private Cursor queryUri(final Uri uri) {
         return resolver.query(uri, null, null, null, null);
@@ -30,7 +29,7 @@ abstract class AbstractDaoImpl<T> implements Constants {
         try (Cursor cursor = queryUri(uri)) {
             List<T> result = new ArrayList<>(cursor.getCount());
             while (cursor.moveToNext()) {
-                result.add(cursorToEntity(cursor));
+                result.add(converter.cursorToEntity(cursor));
             }
             return result;
         }
@@ -40,7 +39,7 @@ abstract class AbstractDaoImpl<T> implements Constants {
         try (Cursor cursor = queryUri(uri)) {
             T result = null;
             if (cursor.moveToFirst()) {
-                result = cursorToEntity(cursor);
+                result = converter.cursorToEntity(cursor);
             }
             return result;
         }
@@ -49,7 +48,7 @@ abstract class AbstractDaoImpl<T> implements Constants {
     final int putEntities(final Uri uri, final T[] entities) {
         ContentValues[] values = new ContentValues[entities.length];
         for (int i = 0; i < entities.length; i++) {
-            values[i] = entityToValues(entities[i]);
+            values[i] = converter.entityToValues(entities[i]);
         }
         return resolver.bulkInsert(uri, values);
     }

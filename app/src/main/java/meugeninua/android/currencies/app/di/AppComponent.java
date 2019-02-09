@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Pair;
 
+import meugeninua.android.currencies.model.converters.EntityConverter;
 import meugeninua.android.currencies.model.dao.CurrencyDao;
 import meugeninua.android.currencies.model.dao.ExchangeDao;
 import meugeninua.android.currencies.model.db.entities.Currency;
@@ -18,6 +19,10 @@ public interface AppComponent {
     SQLiteDatabase provideDatabase();
 
     EntityReader<Pair<Currency, Exchange>> provideCurrencyExchangePairReader();
+
+    EntityConverter<Currency> provideCurrencyConverter();
+
+    EntityConverter<Exchange> provideExchangeConverter();
 
     CurrencyDao provideCurrencyDao();
 
