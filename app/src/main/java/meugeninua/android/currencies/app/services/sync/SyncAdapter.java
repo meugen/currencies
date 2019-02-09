@@ -83,7 +83,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         Notification notification = new NotificationCompat.Builder(context, "sync")
                 .setContentTitle("Sync is done")
                 .setContentText(DateFormat.getDateTimeInstance().format(new Date()))
-                .setSmallIcon(R.drawable.baseline_done_outline_black_18)
+                .setSmallIcon(R.drawable.baseline_done_outline_white_18)
                 .build();
         manager.notify(0, notification);
     }
