@@ -1,4 +1,4 @@
-package meugeninua.android.currencies.ui.activities.main.fragments.currencies.binding;
+package meugeninua.android.currencies.ui.fragments.currencies.binding;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import meugeninua.android.currencies.R;
 import meugeninua.android.currencies.model.db.entities.Currency;
 import meugeninua.android.currencies.model.mappers.EntityMapper;
-import meugeninua.android.currencies.ui.activities.base.fragments.base.binding.BaseBinding;
-import meugeninua.android.currencies.ui.activities.main.fragments.currencies.adapters.CurrenciesAdapter;
+import meugeninua.android.currencies.ui.fragments.base.binding.BaseBinding;
+import meugeninua.android.currencies.ui.fragments.currencies.adapters.CurrenciesAdapter;
 
 public class CurrenciesBindingImpl extends BaseBinding implements CurrenciesBinding {
 

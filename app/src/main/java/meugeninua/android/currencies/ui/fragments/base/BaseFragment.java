@@ -1,4 +1,4 @@
-package meugeninua.android.currencies.ui.activities.base.fragments.base;
+package meugeninua.android.currencies.ui.fragments.base;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import meugeninua.android.currencies.app.CurrenciesApp;
 import meugeninua.android.currencies.app.di.AppComponent;
-import meugeninua.android.currencies.ui.activities.base.fragments.base.binding.Binding;
+import meugeninua.android.currencies.ui.fragments.base.binding.Binding;
 
 public class BaseFragment<B extends Binding> extends Fragment {
 

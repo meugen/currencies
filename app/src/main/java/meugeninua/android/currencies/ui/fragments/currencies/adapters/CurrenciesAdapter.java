@@ -1,4 +1,4 @@
-package meugeninua.android.currencies.ui.activities.main.fragments.currencies.adapters;
+package meugeninua.android.currencies.ui.fragments.currencies.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import meugeninua.android.currencies.R;
 import meugeninua.android.currencies.model.mappers.EntityMapper;
 import meugeninua.android.currencies.model.db.entities.Currency;
-import meugeninua.android.currencies.ui.activities.base.fragments.base.adapters.CursorAdapter;
+import meugeninua.android.currencies.ui.fragments.base.adapters.CursorAdapter;
 
 public class CurrenciesAdapter extends CursorAdapter<Currency, CurrenciesAdapter.CurrencyHolder> {
 

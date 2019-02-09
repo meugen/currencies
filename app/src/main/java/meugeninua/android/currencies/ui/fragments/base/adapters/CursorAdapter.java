@@ -1,4 +1,4 @@
-package meugeninua.android.currencies.ui.activities.base.fragments.base.adapters;
+package meugeninua.android.currencies.ui.fragments.base.adapters;
 
 import android.content.Context;
 import android.database.Cursor;

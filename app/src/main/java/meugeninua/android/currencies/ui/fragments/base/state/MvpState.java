@@ -1,4 +1,4 @@
-package meugeninua.android.currencies.ui.activities.base.fragments.base.state;
+package meugeninua.android.currencies.ui.fragments.base.state;
 
 import android.os.Bundle;
 

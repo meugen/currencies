@@ -1,4 +1,4 @@
-package meugeninua.android.currencies.ui.activities.main.fragments.currencies;
+package meugeninua.android.currencies.ui.fragments.currencies;
 
 import android.database.Cursor;
 import android.net.Uri;
@@ -17,9 +17,9 @@ import meugeninua.android.currencies.app.di.AppComponent;
 import meugeninua.android.currencies.app.provider.Constants;
 import meugeninua.android.currencies.model.db.entities.Currency;
 import meugeninua.android.currencies.model.mappers.EntityMapper;
-import meugeninua.android.currencies.ui.activities.base.fragments.base.BaseFragment;
-import meugeninua.android.currencies.ui.activities.main.fragments.currencies.binding.CurrenciesBinding;
-import meugeninua.android.currencies.ui.activities.main.fragments.currencies.binding.CurrenciesBindingImpl;
+import meugeninua.android.currencies.ui.fragments.base.BaseFragment;
+import meugeninua.android.currencies.ui.fragments.currencies.binding.CurrenciesBinding;
+import meugeninua.android.currencies.ui.fragments.currencies.binding.CurrenciesBindingImpl;
 
 public class CurrenciesFragment extends BaseFragment<CurrenciesBinding> {
 

@@ -1,4 +1,4 @@
-package meugeninua.android.currencies.ui.activities.base.fragments.base.binding;
+package meugeninua.android.currencies.ui.fragments.base.binding;
 
 import android.util.SparseArray;
 import android.view.View;
