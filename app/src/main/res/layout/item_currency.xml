@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/listPreferredItemHeight"
+    android:weightSum="1.0"
+    android:padding="@dimen/default_padding">
+
+    <TextView
+        android:id="@+id/currency_code"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.1"
+        android:textStyle="bold"
+        android:textAppearance="?attr/textAppearanceListItem"
+        tools:text="USD"
+        android:gravity="center_vertical"
+        android:lines="1"
+        android:ellipsize="end"/>
+
+    <TextView
+        android:id="@+id/currency_name"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.9"
+        android:textStyle="normal"
+        android:textAppearance="?attr/textAppearanceListItem"
+        tools:text="American dollar"
+        android:gravity="center_vertical"
+        android:maxLines="2"
+        android:ellipsize="end"/>
+
+</LinearLayout>

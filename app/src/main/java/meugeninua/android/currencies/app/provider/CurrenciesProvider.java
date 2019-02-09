@@ -76,40 +76,62 @@ public class CurrenciesProvider extends ContentProvider implements Constants {
         return cursor;
     }
 
+    private void setCurrenciesNotification(final Cursor cursor) {
+        cursor.setNotificationUri(getContext().getContentResolver(),
+                Uri.parse(String.format("content://%s/currencies", AUTHORITY)));
+    }
+
     private Cursor queryCurrencies() {
-        return database.rawQuery("SELECT * FROM currencies ORDER BY name", new String[0]);
+        Cursor cursor = database.rawQuery("SELECT * FROM currencies ORDER BY name", new String[0]);
+        setCurrenciesNotification(cursor);
+        return cursor;
     }
 
     private Cursor queryCurrencyId(final Uri uri) {
         String id = uri.getLastPathSegment();
-        return database.rawQuery("SELECT * FROM currencies WHERE id=? LIMIT 1", new String[] { id });
+        Cursor cursor = database.rawQuery("SELECT * FROM currencies WHERE id=? LIMIT 1", new String[] { id });
+        setCurrenciesNotification(cursor);
+        return cursor;
+    }
+
+    private void setExchangesNotification(final Cursor cursor, final String currencyId) {
+        cursor.setNotificationUri(getContext().getContentResolver(),
+                Uri.parse(String.format("content://%s/currency/%s/exchanges", AUTHORITY, currencyId)));
     }
 
     private Cursor queryExchanges(final Uri uri) {
         String id = uri.getPathSegments().get(1);
-        return database.rawQuery("SELECT * FROM exchanges WHERE currency_id=? ORDER BY exchange_date DESC",
+        Cursor cursor = database.rawQuery("SELECT * FROM exchanges WHERE currency_id=? ORDER BY exchange_date DESC",
                 new String[] { id });
+        setExchangesNotification(cursor, id);
+        return cursor;
     }
 
     private Cursor queryExchangeById(final Uri uri) {
         List<String> pathSegments = uri.getPathSegments();
         String currencyId = pathSegments.get(1);
         String exchangeId = pathSegments.get(4);
-        return database.rawQuery("SELECT * FROM exchanges WHERE currency_id=? AND id=? LIMIT 1",
+        Cursor cursor = database.rawQuery("SELECT * FROM exchanges WHERE currency_id=? AND id=? LIMIT 1",
                 new String[] { currencyId, exchangeId });
+        setExchangesNotification(cursor, currencyId);
+        return cursor;
     }
 
     private Cursor queryLatestExchange(final Uri uri) {
         String id = uri.getPathSegments().get(1);
-        return database.rawQuery("SELECT * FROM exchanges WHERE currency_id=? ORDER BY exchange_date DESC LIMIT 1",
+        Cursor cursor = database.rawQuery("SELECT * FROM exchanges WHERE currency_id=? ORDER BY exchange_date DESC LIMIT 1",
                 new String[] { id });
+        setExchangesNotification(cursor, id);
+        return cursor;
     }
 
     private Cursor queryExchangeByDate(final Uri uri) {
         String id = uri.getPathSegments().get(1);
         String date = uri.getPathSegments().get(4);
-        return database.rawQuery("SELECT * FROM exchanges WHERE currency_id=? AND exchange_date=? LIMIT 1",
+        Cursor cursor = database.rawQuery("SELECT * FROM exchanges WHERE currency_id=? AND exchange_date=? LIMIT 1",
                 new String[] { id, date });
+        setExchangesNotification(cursor, id);
+        return cursor;
     }
 
     @Nullable

@@ -9,14 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import meugeninua.android.currencies.app.provider.Constants;
-import meugeninua.android.currencies.model.converters.EntityConverter;
+import meugeninua.android.currencies.model.mappers.EntityMapper;
 
 abstract class AbstractDaoImpl<T> implements Constants {
 
     private final ContentResolver resolver;
-    private final EntityConverter<T> converter;
+    private final EntityMapper<T> converter;
 
-    AbstractDaoImpl(final ContentResolver resolver, final EntityConverter<T> converter) {
+    AbstractDaoImpl(final ContentResolver resolver, final EntityMapper<T> converter) {
         this.resolver = resolver;
         this.converter = converter;
     }

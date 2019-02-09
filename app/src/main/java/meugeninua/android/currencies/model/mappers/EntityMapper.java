@@ -1,9 +1,9 @@
-package meugeninua.android.currencies.model.converters;
+package meugeninua.android.currencies.model.mappers;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 
-public interface EntityConverter<T> {
+public interface EntityMapper<T> {
 
     T cursorToEntity(Cursor cursor);
 

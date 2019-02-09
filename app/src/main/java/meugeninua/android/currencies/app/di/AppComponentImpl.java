@@ -5,9 +5,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Pair;
 
 import meugeninua.android.currencies.app.conf.BuildConfigurator;
-import meugeninua.android.currencies.model.converters.EntityConverter;
-import meugeninua.android.currencies.model.converters.impls.CurrencyConverterImpl;
-import meugeninua.android.currencies.model.converters.impls.ExchangeConverterImpl;
+import meugeninua.android.currencies.model.mappers.EntityMapper;
+import meugeninua.android.currencies.model.mappers.impls.CurrencyMapperImpl;
+import meugeninua.android.currencies.model.mappers.impls.ExchangeMapperImpl;
 import meugeninua.android.currencies.model.dao.CurrencyDao;
 import meugeninua.android.currencies.model.dao.ExchangeDao;
 import meugeninua.android.currencies.model.dao.impls.CurrencyDaoImpl;
@@ -25,8 +25,8 @@ public class AppComponentImpl implements AppComponent {
 
     private SQLiteDatabase database;
     private EntityReader<Pair<Currency, Exchange>> currencyExchangePairReader;
-    private EntityConverter<Currency> currencyConverter;
-    private EntityConverter<Exchange> exchangeConverter;
+    private EntityMapper<Currency> currencyConverter;
+    private EntityMapper<Exchange> exchangeConverter;
     private CurrencyDao currencyDao;
     private ExchangeDao exchangeDao;
     private OkHttpClient okHttpClient;
@@ -57,17 +57,17 @@ public class AppComponentImpl implements AppComponent {
     }
 
     @Override
-    public EntityConverter<Currency> provideCurrencyConverter() {
+    public EntityMapper<Currency> provideCurrencyMapper() {
         if (currencyConverter == null) {
-            currencyConverter = new CurrencyConverterImpl();
+            currencyConverter = new CurrencyMapperImpl();
         }
         return currencyConverter;
     }
 
     @Override
-    public EntityConverter<Exchange> provideExchangeConverter() {
+    public EntityMapper<Exchange> provideExchangeMapper() {
         if (exchangeConverter == null) {
-            exchangeConverter = new ExchangeConverterImpl();
+            exchangeConverter = new ExchangeMapperImpl();
         }
         return exchangeConverter;
     }
@@ -77,7 +77,7 @@ public class AppComponentImpl implements AppComponent {
         if (currencyDao == null) {
             currencyDao = new CurrencyDaoImpl(
                     context.getContentResolver(),
-                    provideCurrencyConverter());
+                    provideCurrencyMapper());
         }
         return currencyDao;
     }
@@ -87,7 +87,7 @@ public class AppComponentImpl implements AppComponent {
         if (exchangeDao == null) {
             exchangeDao = new ExchangeDaoImpl(
                     context.getContentResolver(),
-                    provideExchangeConverter());
+                    provideExchangeMapper());
         }
         return exchangeDao;
     }

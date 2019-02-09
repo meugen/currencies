@@ -1,20 +1,18 @@
 package meugeninua.android.currencies.model.dao.impls;
 
 import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.database.Cursor;
 import android.net.Uri;
 
 import java.util.List;
 import java.util.Locale;
 
-import meugeninua.android.currencies.model.converters.EntityConverter;
+import meugeninua.android.currencies.model.mappers.EntityMapper;
 import meugeninua.android.currencies.model.dao.ExchangeDao;
 import meugeninua.android.currencies.model.db.entities.Exchange;
 
 public class ExchangeDaoImpl extends AbstractDaoImpl<Exchange> implements ExchangeDao {
 
-    public ExchangeDaoImpl(final ContentResolver resolver, final EntityConverter<Exchange> converter) {
+    public ExchangeDaoImpl(final ContentResolver resolver, final EntityMapper<Exchange> converter) {
         super(resolver, converter);
     }
 
