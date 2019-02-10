@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <fraction name="item_currency_code_weight">0.1</fraction>
+    <fraction name="item_currency_name_weight">0.9</fraction>
+</resources>

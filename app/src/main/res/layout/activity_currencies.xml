@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activities.currencies.CurrenciesActivity">
-
-    <fragment
-        android:id="@+id/currencies"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="meugeninua.android.currencies.ui.fragments.currencies.CurrenciesFragment"/>
-
-</LinearLayout>
+    tools:context=".ui.activities.currencies.CurrenciesActivity"
+    android:id="@+id/currencies_content"/>

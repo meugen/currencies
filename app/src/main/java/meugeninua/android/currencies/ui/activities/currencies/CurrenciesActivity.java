@@ -3,44 +3,74 @@ package meugeninua.android.currencies.ui.activities.currencies;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.ContentResolver;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import meugeninua.android.currencies.R;
-import meugeninua.android.currencies.app.di.AppComponent;
 import meugeninua.android.currencies.app.provider.Constants;
-import meugeninua.android.currencies.model.dao.CurrencyDao;
-import meugeninua.android.currencies.model.dao.ExchangeDao;
-import meugeninua.android.currencies.model.db.entities.Currency;
 import meugeninua.android.currencies.ui.activities.base.BaseActivity;
 import meugeninua.android.currencies.ui.activities.currencydetails.CurrencyDetailsActivity;
-import meugeninua.android.currencies.ui.fragments.currencies.adapters.CurrenciesAdapter;
+import meugeninua.android.currencies.ui.fragments.currencies.CurrenciesFragment;
+import meugeninua.android.currencies.ui.fragments.currencydetails.CurrencyDetailsFragment;
+import meugeninua.android.currencies.ui.fragments.message.MessageFragment;
 
 public class CurrenciesActivity extends BaseActivity implements Constants,
-        CurrenciesAdapter.OnCurrencyClickListener {
+        OnShowCurrencyDetailsListener {
 
-    private SQLiteDatabase database;
-    private CurrencyDao currencyDao;
-    private ExchangeDao exchangeDao;
+    private static final String TAG_CURRENCIES_FRAGMENT = "currencies_fragment";
+    private static final String ARG_CURRENT_CURRENCY_ID = "current_currency_id";
+
+    private Integer currentCurrencyId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupSync();
         setContentView(R.layout.activity_currencies);
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(ARG_CURRENT_CURRENCY_ID)) {
+            currentCurrencyId = savedInstanceState.getInt(ARG_CURRENT_CURRENCY_ID);
+        }
+
+        FragmentManager manager = getSupportFragmentManager();
+        if (manager.findFragmentByTag(TAG_CURRENCIES_FRAGMENT) == null) {
+            manager.beginTransaction()
+                    .replace(R.id.currencies_content, new CurrenciesFragment(), TAG_CURRENCIES_FRAGMENT)
+                    .commit();
+        }
+        showCurrencyDetails(currentCurrencyId, true);
     }
 
     @Override
-    protected void inject(final AppComponent appComponent) {
-        super.inject(appComponent);
-        this.database = appComponent.provideDatabase();
-        this.currencyDao = appComponent.provideCurrencyDao();
-        this.exchangeDao = appComponent.provideExchangeDao();
+    protected void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (currentCurrencyId != null) {
+            outState.putInt(ARG_CURRENT_CURRENCY_ID, currentCurrencyId);
+        }
     }
 
     @Override
-    public void onCurrencyClick(final Currency currency) {
-        startActivity(CurrencyDetailsActivity.build(this, currency.id));
+    public void onShowCurrencyDetails(final int currencyId) {
+        currentCurrencyId = currencyId;
+        showCurrencyDetails(currencyId, false);
+    }
+
+    private void showCurrencyDetails(final Integer currencyId, final boolean fragmentOnly) {
+        if (getResources().getBoolean(R.bool.display_details_in_currencies)) {
+            Fragment fragment = currencyId == null
+                    ? MessageFragment.build(R.string.message_no_content)
+                    : CurrencyDetailsFragment.build(currencyId);
+
+            FragmentManager manager = getSupportFragmentManager();
+            manager.beginTransaction()
+                    .replace(R.id.currency_details_content, fragment)
+                    .commit();
+            return;
+        }
+        if (!fragmentOnly && currencyId != null) {
+            startActivity(CurrencyDetailsActivity.build(this, currencyId));
+        }
     }
 
     private void setupSync() {

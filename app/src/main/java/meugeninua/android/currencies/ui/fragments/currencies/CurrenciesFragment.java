@@ -18,20 +18,21 @@ import meugeninua.android.currencies.app.di.AppComponent;
 import meugeninua.android.currencies.app.provider.Constants;
 import meugeninua.android.currencies.model.db.entities.Currency;
 import meugeninua.android.currencies.model.mappers.EntityMapper;
+import meugeninua.android.currencies.ui.activities.currencies.OnShowCurrencyDetailsListener;
 import meugeninua.android.currencies.ui.fragments.base.BaseFragment;
 import meugeninua.android.currencies.ui.fragments.currencies.adapters.CurrenciesAdapter;
 import meugeninua.android.currencies.ui.fragments.currencies.binding.CurrenciesBinding;
 import meugeninua.android.currencies.ui.fragments.currencies.binding.CurrenciesBindingImpl;
 
-public class CurrenciesFragment extends BaseFragment<CurrenciesBinding> {
+public class CurrenciesFragment extends BaseFragment<CurrenciesBinding> implements CurrenciesAdapter.OnCurrencyClickListener {
 
     private EntityMapper<Currency> currencyMapper;
-    private CurrenciesAdapter.OnCurrencyClickListener listener;
+    private OnShowCurrencyDetailsListener listener;
 
     @Override
     public void onAttach(final Context context) {
         super.onAttach(context);
-        listener = (CurrenciesAdapter.OnCurrencyClickListener) context;
+        listener = (OnShowCurrencyDetailsListener) context;
     }
 
     @Override
@@ -46,7 +47,8 @@ public class CurrenciesFragment extends BaseFragment<CurrenciesBinding> {
             @NonNull final LayoutInflater inflater,
             @Nullable final ViewGroup container,
             @Nullable final Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_currencies, container, false);
+        return inflater.inflate(R.layout.fragment_currencies,
+                container, false);
     }
 
     @Override
@@ -61,7 +63,12 @@ public class CurrenciesFragment extends BaseFragment<CurrenciesBinding> {
             @NonNull final View view,
             @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.setupRecycler(currencyMapper, listener);
+        binding.setupRecycler(currencyMapper, this);
+    }
+
+    @Override
+    public void onCurrencyClick(final Currency currency) {
+        listener.onShowCurrencyDetails(currency.id);
     }
 
     @Override

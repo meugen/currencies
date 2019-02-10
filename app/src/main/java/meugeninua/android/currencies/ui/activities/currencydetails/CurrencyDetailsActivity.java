@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 import meugeninua.android.currencies.R;
 import meugeninua.android.currencies.ui.activities.base.BaseActivity;
-import meugeninua.android.currencies.ui.fragments.currencies.adapters.CurrenciesAdapter;
 import meugeninua.android.currencies.ui.fragments.currencydetails.CurrencyDetailsFragment;
 
 public class CurrencyDetailsActivity extends BaseActivity {

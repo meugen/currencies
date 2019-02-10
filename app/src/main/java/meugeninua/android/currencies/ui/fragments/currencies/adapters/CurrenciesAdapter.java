@@ -11,8 +11,8 @@ import androidx.core.util.ObjectsCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import meugeninua.android.currencies.R;
-import meugeninua.android.currencies.model.mappers.EntityMapper;
 import meugeninua.android.currencies.model.db.entities.Currency;
+import meugeninua.android.currencies.model.mappers.EntityMapper;
 import meugeninua.android.currencies.ui.fragments.base.adapters.CursorAdapter;
 
 public class CurrenciesAdapter extends CursorAdapter<Currency, CurrenciesAdapter.CurrencyHolder> {

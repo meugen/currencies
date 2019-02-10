@@ -6,9 +6,9 @@ import android.net.Uri;
 import java.util.List;
 import java.util.Locale;
 
-import meugeninua.android.currencies.model.mappers.EntityMapper;
 import meugeninua.android.currencies.model.dao.CurrencyDao;
 import meugeninua.android.currencies.model.db.entities.Currency;
+import meugeninua.android.currencies.model.mappers.EntityMapper;
 
 public class CurrencyDaoImpl extends AbstractDaoImpl<Currency> implements CurrencyDao {
 
