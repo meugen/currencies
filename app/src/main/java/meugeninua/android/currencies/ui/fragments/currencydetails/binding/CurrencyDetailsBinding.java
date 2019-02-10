@@ -8,9 +8,16 @@ import meugeninua.android.currencies.ui.fragments.base.binding.Binding;
 
 public interface CurrencyDetailsBinding extends Binding {
 
+    void setupDateSelectedCallback(OnDateSelectedListener listener);
+
     void displayDates(List<String> dates, int position);
 
     void displayContent(Currency currency, Exchange exchange);
 
     void displayNoContent();
+
+    interface OnDateSelectedListener {
+
+        void onDateSelected(String date);
+    }
 }

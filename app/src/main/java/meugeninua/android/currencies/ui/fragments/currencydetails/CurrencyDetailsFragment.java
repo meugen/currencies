@@ -3,6 +3,7 @@ package meugeninua.android.currencies.ui.fragments.currencydetails;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,9 +28,11 @@ import meugeninua.android.currencies.ui.fragments.base.BaseFragment;
 import meugeninua.android.currencies.ui.fragments.currencydetails.binding.CurrencyDetailsBinding;
 import meugeninua.android.currencies.ui.fragments.currencydetails.binding.CurrencyDetailsBindingImpl;
 
-public class CurrencyDetailsFragment extends BaseFragment<CurrencyDetailsBinding> {
+public class CurrencyDetailsFragment extends BaseFragment<CurrencyDetailsBinding>
+        implements CurrencyDetailsBinding.OnDateSelectedListener {
 
     private static final String ARG_CURRENCY_ID = "currency_id";
+    private static final String ARG_SELECTED_DATE = "selected_date";
 
     private static final int CONTENT_LOADER_ID = 1;
     private static final int DATES_LOADER_ID = 2;
@@ -47,6 +50,7 @@ public class CurrencyDetailsFragment extends BaseFragment<CurrencyDetailsBinding
     private EntityMapper<Exchange> exchangeMapper;
 
     private List<String> dates;
+    private String selectedDate;
 
     @Nullable
     @Override
@@ -58,9 +62,26 @@ public class CurrencyDetailsFragment extends BaseFragment<CurrencyDetailsBinding
     }
 
     @Override
+    public void onViewCreated(
+            @NonNull final View view,
+            @Nullable final Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        binding.displayDates(Collections.emptyList(), 0);
+        binding.setupDateSelectedCallback(this);
+    }
+
+    @Override
     public void onActivityCreated(@Nullable final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        binding.displayDates(Collections.emptyList(), 0);
+        if (savedInstanceState != null) {
+            selectedDate = savedInstanceState.getString(ARG_SELECTED_DATE);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull final Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(ARG_SELECTED_DATE, selectedDate);
     }
 
     @Override
@@ -68,6 +89,13 @@ public class CurrencyDetailsFragment extends BaseFragment<CurrencyDetailsBinding
         super.onStart();
         LoaderManager.getInstance(this).restartLoader(DATES_LOADER_ID,
                 getArguments(), new ExchangeCallbacksImpl());
+    }
+
+    @Override
+    public void onDateSelected(final String date) {
+        Log.d("CurrencyDetailsFrament", "onDateSelected(\"" + date + "\") method called");
+        selectedDate = date;
+        reloadContent();
     }
 
     @Override
@@ -80,7 +108,7 @@ public class CurrencyDetailsFragment extends BaseFragment<CurrencyDetailsBinding
 
     private void onContentLoaded(final Cursor cursor) {
         if (!cursor.moveToFirst()) {
-            binding.displayDates(Collections.emptyList(), -1);
+            binding.displayDates(dates, -1);
             binding.displayNoContent();
             return;
         }
@@ -98,8 +126,14 @@ public class CurrencyDetailsFragment extends BaseFragment<CurrencyDetailsBinding
         while (cursor.moveToNext()) {
             dates.add(cursor.getString(index));
         }
+        reloadContent();
+    }
+
+    private void reloadContent() {
+        Bundle args = new Bundle(getArguments());
+        args.putString(ARG_SELECTED_DATE, selectedDate);
         LoaderManager.getInstance(this).restartLoader(CONTENT_LOADER_ID,
-                getArguments(), new ExchangeCallbacksImpl());
+                args, new ExchangeCallbacksImpl());
     }
 
     private class ExchangeCallbacksImpl implements LoaderManager.LoaderCallbacks<Cursor>, Constants {
@@ -111,8 +145,10 @@ public class CurrencyDetailsFragment extends BaseFragment<CurrencyDetailsBinding
 
             CursorLoader loader = new CursorLoader(getContext());
             if (id == CONTENT_LOADER_ID) {
-                loader.setUri(Uri.parse(String.format(Locale.ENGLISH, "content://%s/currency/%d/exchange/latest",
-                        AUTHORITY, currencyId)));
+                String date = args.getString(ARG_SELECTED_DATE);
+                String pattern = date == null ? "latest" : "date/" + date;
+                loader.setUri(Uri.parse(String.format(Locale.ENGLISH, "content://%s/currency/%d/exchange/%s",
+                        AUTHORITY, currencyId, pattern)));
             } else if (id == DATES_LOADER_ID) {
                 loader.setUri(Uri.parse(String.format(Locale.ENGLISH, "content://%s/currency/%d/exchange/dates",
                         AUTHORITY, currencyId)));
