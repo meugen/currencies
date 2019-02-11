@@ -9,14 +9,16 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import meugeninua.android.currencies.R;
 import meugeninua.android.currencies.app.provider.Constants;
+import meugeninua.android.currencies.model.db.entities.Currency;
 import meugeninua.android.currencies.ui.activities.base.BaseActivity;
 import meugeninua.android.currencies.ui.activities.currencydetails.CurrencyDetailsActivity;
 import meugeninua.android.currencies.ui.fragments.currencies.CurrenciesFragment;
+import meugeninua.android.currencies.ui.fragments.currencies.adapters.CurrenciesAdapter;
 import meugeninua.android.currencies.ui.fragments.currencydetails.CurrencyDetailsFragment;
 import meugeninua.android.currencies.ui.fragments.message.MessageFragment;
 
 public class CurrenciesActivity extends BaseActivity implements Constants,
-        OnShowCurrencyDetailsListener {
+        CurrenciesAdapter.OnCurrencyClickListener {
 
     private static final String TAG_CURRENCIES_FRAGMENT = "currencies_fragment";
     private static final String ARG_CURRENT_CURRENCY_ID = "current_currency_id";
@@ -39,7 +41,7 @@ public class CurrenciesActivity extends BaseActivity implements Constants,
                     .replace(R.id.currencies_content, new CurrenciesFragment(), TAG_CURRENCIES_FRAGMENT)
                     .commit();
         }
-        showCurrencyDetails(currentCurrencyId, true);
+        showCurrencyDetails(true);
     }
 
     @Override
@@ -51,16 +53,16 @@ public class CurrenciesActivity extends BaseActivity implements Constants,
     }
 
     @Override
-    public void onShowCurrencyDetails(final int currencyId) {
-        currentCurrencyId = currencyId;
-        showCurrencyDetails(currencyId, false);
+    public void onCurrencyClick(Currency currency) {
+        currentCurrencyId = currency.id;
+        showCurrencyDetails(false);
     }
 
-    private void showCurrencyDetails(final Integer currencyId, final boolean fragmentOnly) {
+    private void showCurrencyDetails(final boolean fragmentOnly) {
         if (getResources().getBoolean(R.bool.display_details_in_currencies)) {
-            Fragment fragment = currencyId == null
+            Fragment fragment = currentCurrencyId == null
                     ? MessageFragment.build(R.string.message_no_content)
-                    : CurrencyDetailsFragment.build(currencyId);
+                    : CurrencyDetailsFragment.build(currentCurrencyId);
 
             FragmentManager manager = getSupportFragmentManager();
             manager.beginTransaction()
@@ -68,8 +70,8 @@ public class CurrenciesActivity extends BaseActivity implements Constants,
                     .commit();
             return;
         }
-        if (!fragmentOnly && currencyId != null) {
-            startActivity(CurrencyDetailsActivity.build(this, currencyId));
+        if (!fragmentOnly && currentCurrencyId != null) {
+            startActivity(CurrencyDetailsActivity.build(this, currentCurrencyId));
         }
     }
 

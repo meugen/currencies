@@ -18,21 +18,20 @@ import meugeninua.android.currencies.app.di.AppComponent;
 import meugeninua.android.currencies.app.provider.Constants;
 import meugeninua.android.currencies.model.db.entities.Currency;
 import meugeninua.android.currencies.model.mappers.EntityMapper;
-import meugeninua.android.currencies.ui.activities.currencies.OnShowCurrencyDetailsListener;
 import meugeninua.android.currencies.ui.fragments.base.BaseFragment;
 import meugeninua.android.currencies.ui.fragments.currencies.adapters.CurrenciesAdapter;
 import meugeninua.android.currencies.ui.fragments.currencies.binding.CurrenciesBinding;
 import meugeninua.android.currencies.ui.fragments.currencies.binding.CurrenciesBindingImpl;
 
-public class CurrenciesFragment extends BaseFragment<CurrenciesBinding> implements CurrenciesAdapter.OnCurrencyClickListener {
+public class CurrenciesFragment extends BaseFragment<CurrenciesBinding> {
 
     private EntityMapper<Currency> currencyMapper;
-    private OnShowCurrencyDetailsListener listener;
+    private CurrenciesAdapter.OnCurrencyClickListener listener;
 
     @Override
     public void onAttach(final Context context) {
         super.onAttach(context);
-        listener = (OnShowCurrencyDetailsListener) context;
+        listener = (CurrenciesAdapter.OnCurrencyClickListener) context;
     }
 
     @Override
@@ -63,12 +62,7 @@ public class CurrenciesFragment extends BaseFragment<CurrenciesBinding> implemen
             @NonNull final View view,
             @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.setupRecycler(currencyMapper, this);
-    }
-
-    @Override
-    public void onCurrencyClick(final Currency currency) {
-        listener.onShowCurrencyDetails(currency.id);
+        binding.setupRecycler(currencyMapper, listener);
     }
 
     @Override
