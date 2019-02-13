@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import meugeninua.android.currencies.R;
 import meugeninua.android.currencies.model.db.entities.Currency;
-import meugeninua.android.currencies.model.mappers.EntityMapper;
 import meugeninua.android.currencies.ui.fragments.base.adapters.CursorAdapter;
 
 public class CurrenciesAdapter extends CursorAdapter<Currency, CurrenciesAdapter.CurrencyHolder> {
@@ -21,9 +20,8 @@ public class CurrenciesAdapter extends CursorAdapter<Currency, CurrenciesAdapter
 
     public CurrenciesAdapter(
             final Context context,
-            final EntityMapper<Currency> converter,
             final OnCurrencyClickListener listener) {
-        super(context, converter, new ItemCallbackImpl());
+        super(context, new ItemCallbackImpl());
         this.listener = listener;
     }
 

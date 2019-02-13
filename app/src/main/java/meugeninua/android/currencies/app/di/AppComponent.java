@@ -5,8 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.util.Pair;
 
-import java.util.concurrent.ExecutorService;
-
 import androidx.lifecycle.ViewModelProvider;
 import meugeninua.android.currencies.model.dao.CurrencyDao;
 import meugeninua.android.currencies.model.dao.ExchangeDao;

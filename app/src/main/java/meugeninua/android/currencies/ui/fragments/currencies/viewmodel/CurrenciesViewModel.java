@@ -4,11 +4,9 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
-import android.os.Looper;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;

@@ -7,9 +7,6 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.util.Pair;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import androidx.lifecycle.ViewModelProvider;
 import meugeninua.android.currencies.app.conf.BuildConfigurator;
 import meugeninua.android.currencies.model.dao.CurrencyDao;

@@ -5,9 +5,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import meugeninua.android.currencies.app.provider.Constants;
 import meugeninua.android.currencies.model.mappers.EntityMapper;
 
