@@ -1,6 +1,7 @@
 package meugeninua.android.currencies.model.dao.impls;
 
 import android.content.ContentResolver;
+import android.database.Cursor;
 import android.net.Uri;
 
 import java.util.List;
@@ -12,26 +13,41 @@ import meugeninua.android.currencies.model.mappers.EntityMapper;
 
 public class CurrencyDaoImpl extends AbstractDaoImpl<Currency> implements CurrencyDao {
 
-    public CurrencyDaoImpl(final ContentResolver resolver, final EntityMapper<Currency> converter) {
-        super(resolver, converter);
+    private final EntityMapper<Currency> mapper;
+
+    public CurrencyDaoImpl(final ContentResolver resolver, final EntityMapper<Currency> mapper) {
+        super(resolver);
+        this.mapper = mapper;
     }
 
     @Override
-    public List<Currency> getCurrencies() {
-        Uri uri = Uri.parse(String.format("content://%s/currencies", AUTHORITY));
-        return getList(uri);
+    public List<Currency> getCurrenciesContent() {
+        try (Cursor cursor = getCurrenciesCursor()) {
+            return mapper.cursorToEntityList(cursor);
+        }
     }
 
     @Override
-    public Currency getCurrencyById(final int id) {
-        Uri uri = Uri.parse(String.format(Locale.ENGLISH, "content://%s/currency/%d",
-                AUTHORITY, id));
-        return getSingle(uri);
+    public Cursor getCurrenciesCursor() {
+        return queryUri(Uri.parse(String.format("content://%s/currencies", AUTHORITY)));
+    }
+
+    @Override
+    public Currency getCurrencyByIdContent(final int id) {
+        try (Cursor cursor = getCurrencyByIdCursor(id)) {
+            return mapper.cursorToSingleEntity(cursor);
+        }
+    }
+
+    @Override
+    public Cursor getCurrencyByIdCursor(int id) {
+        return queryUri(Uri.parse(String.format(Locale.ENGLISH, "content://%s/currency/%d",
+                AUTHORITY, id)));
     }
 
     @Override
     public int putCurrencies(final Currency... currencies) {
         Uri uri = Uri.parse(String.format("content://%s/currencies", AUTHORITY));
-        return putEntities(uri, currencies);
+        return putEntities(uri, currencies, mapper);
     }
 }

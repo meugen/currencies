@@ -1,7 +1,8 @@
 package meugeninua.android.currencies.ui.fragments.currencies.binding;
 
 import android.content.Context;
-import android.database.Cursor;
+
+import java.util.List;
 
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,7 +36,7 @@ public class CurrenciesBindingImpl extends BaseBinding implements CurrenciesBind
     }
 
     @Override
-    public void setContent(final Cursor cursor) {
-        adapter.swapCursor(cursor);
+    public void setContent(final List<Currency> currencies) {
+        adapter.swapContent(currencies);
     }
 }

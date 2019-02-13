@@ -5,9 +5,8 @@ import android.database.Cursor;
 
 import meugeninua.android.currencies.app.provider.Constants;
 import meugeninua.android.currencies.model.db.entities.Currency;
-import meugeninua.android.currencies.model.mappers.EntityMapper;
 
-public class CurrencyMapperImpl implements EntityMapper<Currency>, Constants {
+public class CurrencyMapperImpl extends AbstractMapperImpl<Currency> implements Constants {
 
     @Override
     public Currency cursorToEntity(final Cursor cursor) {

@@ -1,6 +1,7 @@
 package meugeninua.android.currencies.model.dao.impls;
 
 import android.content.ContentResolver;
+import android.database.Cursor;
 import android.net.Uri;
 
 import java.util.List;
@@ -12,42 +13,69 @@ import meugeninua.android.currencies.model.mappers.EntityMapper;
 
 public class ExchangeDaoImpl extends AbstractDaoImpl<Exchange> implements ExchangeDao {
 
-    public ExchangeDaoImpl(final ContentResolver resolver, final EntityMapper<Exchange> converter) {
-        super(resolver, converter);
+    private final EntityMapper<Exchange> mapper;
+
+    public ExchangeDaoImpl(final ContentResolver resolver, final EntityMapper<Exchange> mapper) {
+        super(resolver);
+        this.mapper = mapper;
     }
 
     @Override
-    public List<Exchange> getExchanges(final int currencyId) {
-        Uri uri = Uri.parse(String.format(Locale.ENGLISH, "content://%s/currency/%d/exchanges",
-                AUTHORITY, currencyId));
-        return getList(uri);
+    public List<Exchange> getExchangesContent(final int currencyId) {
+        try (Cursor cursor = getExchangesCursor(currencyId)) {
+            return mapper.cursorToEntityList(cursor);
+        }
     }
 
     @Override
-    public Exchange getExchangeById(final int currencyId, final int exchangeId) {
-        Uri uri = Uri.parse(String.format(Locale.ENGLISH, "content://%s/currency/%d/exchange/id/%d",
-                AUTHORITY, currencyId, exchangeId));
-        return getSingle(uri);
+    public Cursor getExchangesCursor(int currencyId) {
+        return queryUri(Uri.parse(String.format(Locale.ENGLISH, "content://%s/currency/%d/exchanges",
+                AUTHORITY, currencyId)));
     }
 
     @Override
-    public Exchange getLatestExchange(final int currencyId) {
-        Uri uri = Uri.parse(String.format(Locale.ENGLISH, "content://%s/currency/%d/exchange/latest",
-                AUTHORITY, currencyId));
-        return getSingle(uri);
+    public Exchange getExchangeByIdContent(final int currencyId, final int exchangeId) {
+        try (Cursor cursor = getExchangeByIdCursor(currencyId, exchangeId)) {
+            return mapper.cursorToSingleEntity(cursor);
+        }
     }
 
     @Override
-    public Exchange getExchangeByDate(final int currencyId, final String date) {
-        Uri uri = Uri.parse(String.format(Locale.ENGLISH, "content://%s/currency/%d/exchange/date/%s",
-                AUTHORITY, currencyId, date));
-        return getSingle(uri);
+    public Cursor getExchangeByIdCursor(int currencyId, int exchangeId) {
+        return queryUri(Uri.parse(String.format(Locale.ENGLISH, "content://%s/currency/%d/exchange/id/%d",
+                AUTHORITY, currencyId, exchangeId)));
+    }
+
+    @Override
+    public Exchange getLatestExchangeContent(final int currencyId) {
+        try (Cursor cursor = getLatestExchangeCursor(currencyId)) {
+            return mapper.cursorToSingleEntity(cursor);
+        }
+    }
+
+    @Override
+    public Cursor getLatestExchangeCursor(int currencyId) {
+        return queryUri(Uri.parse(String.format(Locale.ENGLISH, "content://%s/currency/%d/exchange/latest",
+                AUTHORITY, currencyId)));
+    }
+
+    @Override
+    public Exchange getExchangeByDateContent(final int currencyId, final String date) {
+        try (Cursor cursor = getExchangeByDateCursor(currencyId, date)) {
+            return mapper.cursorToSingleEntity(cursor);
+        }
+    }
+
+    @Override
+    public Cursor getExchangeByDateCursor(int currencyId, String date) {
+        return queryUri(Uri.parse(String.format(Locale.ENGLISH, "content://%s/currency/%d/exchange/date/%s",
+                AUTHORITY, currencyId, date)));
     }
 
     @Override
     public int putExchanges(final int currencyId, final Exchange... exchanges) {
         Uri uri = Uri.parse(String.format(Locale.ENGLISH, "content://%s/currency/%d/exchanges",
                 AUTHORITY, currencyId));
-        return putEntities(uri, exchanges);
+        return putEntities(uri, exchanges, mapper);
     }
 }

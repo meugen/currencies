@@ -15,8 +15,12 @@ buildscript {
 }
 
 ext.versions = [
-        'androidx': '1.0.0',
         'okhttp': '3.12.1'
+]
+ext.versions.androidx = [
+        'appcompat': '1.0.2',
+        'recyclerview': '1.0.0',
+        'lifecycle': '2.0.0'
 ]
 
 allprojects {

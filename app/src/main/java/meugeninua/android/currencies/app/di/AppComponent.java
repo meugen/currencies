@@ -2,8 +2,12 @@ package meugeninua.android.currencies.app.di;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Handler;
 import android.util.Pair;
 
+import java.util.concurrent.ExecutorService;
+
+import androidx.lifecycle.ViewModelProvider;
 import meugeninua.android.currencies.model.dao.CurrencyDao;
 import meugeninua.android.currencies.model.dao.ExchangeDao;
 import meugeninua.android.currencies.model.db.entities.Currency;
@@ -29,4 +33,8 @@ public interface AppComponent {
     ExchangeDao provideExchangeDao();
 
     OkHttpClient provideOkHttpClient();
+
+    ViewModelProvider.Factory provideViewModelFactory();
+
+    Handler provideWorkerHandler();
 }

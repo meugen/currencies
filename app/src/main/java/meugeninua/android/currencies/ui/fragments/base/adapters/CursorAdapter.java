@@ -32,11 +32,13 @@ public abstract class CursorAdapter<T, VH extends RecyclerView.ViewHolder> exten
         this.differ = new AsyncListDiffer<>(this, callback);
     }
 
-    public final void swapCursor(final Cursor cursor) {
-        this.items = new ArrayList<>(cursor.getCount());
-        while (cursor.moveToNext()) {
-            this.items.add(converter.cursorToEntity(cursor));
-        }
+    public final void swapContent(final Cursor cursor) {
+        this.items = converter.cursorToEntityList(cursor);
+        differ.submitList(this.items);
+    }
+
+    public final void swapContent(final List<T> items) {
+        this.items = items;
         differ.submitList(this.items);
     }
 
