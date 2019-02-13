@@ -2,8 +2,12 @@ package meugeninua.android.currencies.app.di;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
 import android.util.Pair;
 
+import androidx.lifecycle.ViewModelProvider;
 import meugeninua.android.currencies.app.conf.BuildConfigurator;
 import meugeninua.android.currencies.model.dao.CurrencyDao;
 import meugeninua.android.currencies.model.dao.ExchangeDao;
@@ -30,6 +34,8 @@ public class AppComponentImpl implements AppComponent {
     private CurrencyDao currencyDao;
     private ExchangeDao exchangeDao;
     private OkHttpClient okHttpClient;
+    private ViewModelProvider.Factory viewModelFactory;
+    private Handler workerHandler;
 
     public AppComponentImpl(final Context context) {
         this.context = context;
@@ -104,5 +110,24 @@ public class AppComponentImpl implements AppComponent {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         BuildConfigurator.configureOkHttpClient(builder);
         return builder.build();
+    }
+
+    @Override
+    public ViewModelProvider.Factory provideViewModelFactory() {
+        if (viewModelFactory == null) {
+            viewModelFactory = new InjectViewModelFactory(this);
+        }
+        return viewModelFactory;
+    }
+
+    @Override
+    public Handler provideWorkerHandler() {
+        if (workerHandler == null) {
+            HandlerThread thread = new HandlerThread("worker-thread");
+            thread.start();
+            Looper looper = thread.getLooper();
+            workerHandler = new Handler(looper);
+        }
+        return workerHandler;
     }
 }
