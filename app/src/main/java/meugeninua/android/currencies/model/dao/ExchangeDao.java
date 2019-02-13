@@ -24,5 +24,9 @@ public interface ExchangeDao {
 
     Cursor getExchangeByDateCursor(int currencyId, String date);
 
+    List<String> getExchangeDatesContent(int currencyId);
+
+    Cursor getExchangeDatesCursor(int currencyId);
+
     int putExchanges(int currencyId, Exchange... exchanges);
 }

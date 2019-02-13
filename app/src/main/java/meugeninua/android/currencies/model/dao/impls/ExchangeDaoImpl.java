@@ -10,6 +10,7 @@ import java.util.Locale;
 import meugeninua.android.currencies.model.dao.ExchangeDao;
 import meugeninua.android.currencies.model.db.entities.Exchange;
 import meugeninua.android.currencies.model.mappers.EntityMapper;
+import meugeninua.android.currencies.model.mappers.utils.MapperUtils;
 
 public class ExchangeDaoImpl extends AbstractDaoImpl<Exchange> implements ExchangeDao {
 
@@ -70,6 +71,19 @@ public class ExchangeDaoImpl extends AbstractDaoImpl<Exchange> implements Exchan
     public Cursor getExchangeByDateCursor(int currencyId, String date) {
         return queryUri(Uri.parse(String.format(Locale.ENGLISH, "content://%s/currency/%d/exchange/date/%s",
                 AUTHORITY, currencyId, date)));
+    }
+
+    @Override
+    public List<String> getExchangeDatesContent(int currencyId) {
+        try (Cursor cursor = getExchangeDatesCursor(currencyId)) {
+            return MapperUtils.cursorToStringList(cursor, FLD_EXCHANGE_DATE);
+        }
+    }
+
+    @Override
+    public Cursor getExchangeDatesCursor(int currencyId) {
+        return queryUri(Uri.parse(String.format(Locale.ENGLISH, "content://%s/currency/%d/exchange/dates",
+                AUTHORITY, currencyId)));
     }
 
     @Override

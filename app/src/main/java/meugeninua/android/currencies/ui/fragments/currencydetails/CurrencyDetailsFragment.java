@@ -1,32 +1,25 @@
 package meugeninua.android.currencies.ui.fragments.currencydetails;
 
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.CursorLoader;
-import androidx.loader.content.Loader;
 import meugeninua.android.currencies.R;
 import meugeninua.android.currencies.app.di.AppComponent;
-import meugeninua.android.currencies.app.provider.Constants;
 import meugeninua.android.currencies.model.db.entities.Currency;
 import meugeninua.android.currencies.model.db.entities.Exchange;
-import meugeninua.android.currencies.model.mappers.EntityMapper;
 import meugeninua.android.currencies.ui.fragments.base.BaseFragment;
 import meugeninua.android.currencies.ui.fragments.currencydetails.binding.CurrencyDetailsBinding;
 import meugeninua.android.currencies.ui.fragments.currencydetails.binding.CurrencyDetailsBindingImpl;
+import meugeninua.android.currencies.ui.fragments.currencydetails.viewmodel.CurrencyDetailsViewModel;
 
 public class CurrencyDetailsFragment extends BaseFragment<CurrencyDetailsBinding>
         implements CurrencyDetailsBinding.OnDateSelectedListener {
@@ -46,11 +39,17 @@ public class CurrencyDetailsFragment extends BaseFragment<CurrencyDetailsBinding
         return fragment;
     }
 
-    private EntityMapper<Currency> currencyMapper;
-    private EntityMapper<Exchange> exchangeMapper;
+    private CurrencyDetailsViewModel viewModel;
 
     private List<String> dates;
     private String selectedDate;
+    private int currencyId;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.currencyId = getArguments().getInt(ARG_CURRENCY_ID);
+    }
 
     @Nullable
     @Override
@@ -87,86 +86,44 @@ public class CurrencyDetailsFragment extends BaseFragment<CurrencyDetailsBinding
     @Override
     public void onStart() {
         super.onStart();
-        LoaderManager.getInstance(this).restartLoader(DATES_LOADER_ID,
-                getArguments(), new ExchangeCallbacksImpl());
+        viewModel.getDates(currencyId).observe(this, this::onDatesLoaded);
     }
 
     @Override
     public void onDateSelected(final String date) {
         Log.d("CurrencyDetailsFrament", "onDateSelected(\"" + date + "\") method called");
         selectedDate = date;
-        reloadContent();
+        displayContent(true);
     }
 
     @Override
     protected void inject(final AppComponent appComponent) {
         super.inject(appComponent);
         binding = new CurrencyDetailsBindingImpl(getContext());
-        currencyMapper = appComponent.provideCurrencyMapper();
-        exchangeMapper = appComponent.provideExchangeMapper();
+        viewModel = getViewModel(appComponent.provideViewModelFactory(), CurrencyDetailsViewModel.class);
     }
 
-    private void onContentLoaded(final Cursor cursor) {
-        if (!cursor.moveToFirst()) {
+    private void onContentLoaded(final Pair<Currency, Exchange> pair) {
+        if (pair == null) {
             binding.displayDates(dates, -1);
             binding.displayNoContent();
             return;
         }
-        Exchange exchange = exchangeMapper.cursorToEntity(cursor);
         binding.displayContent(
-                currencyMapper.cursorToEntity(cursor),
-                exchange);
-        binding.displayDates(dates, dates.indexOf(exchange.exchangeDate));
+                pair.first, pair.second);
+        binding.displayDates(dates, dates.indexOf(pair.second.exchangeDate));
     }
 
-    private void onDatesLoaded(final Cursor cursor) {
-        int index = cursor.getColumnIndexOrThrow(Constants.FLD_EXCHANGE_DATE);
-
-        dates = new ArrayList<>(cursor.getCount());
-        while (cursor.moveToNext()) {
-            dates.add(cursor.getString(index));
-        }
-        reloadContent();
+    private void onDatesLoaded(final List<String> dates) {
+        this.dates = dates;
+        displayContent(false);
     }
 
-    private void reloadContent() {
-        Bundle args = new Bundle(getArguments());
-        args.putString(ARG_SELECTED_DATE, selectedDate);
-        LoaderManager.getInstance(this).restartLoader(CONTENT_LOADER_ID,
-                args, new ExchangeCallbacksImpl());
-    }
-
-    private class ExchangeCallbacksImpl implements LoaderManager.LoaderCallbacks<Cursor>, Constants {
-
-        @NonNull
-        @Override
-        public Loader<Cursor> onCreateLoader(final int id, @Nullable final Bundle args) {
-            int currencyId = args.getInt(ARG_CURRENCY_ID);
-
-            CursorLoader loader = new CursorLoader(getContext());
-            if (id == CONTENT_LOADER_ID) {
-                String date = args.getString(ARG_SELECTED_DATE);
-                String pattern = date == null ? "latest" : "date/" + date;
-                loader.setUri(Uri.parse(String.format(Locale.ENGLISH, "content://%s/currency/%d/exchange/%s",
-                        AUTHORITY, currencyId, pattern)));
-            } else if (id == DATES_LOADER_ID) {
-                loader.setUri(Uri.parse(String.format(Locale.ENGLISH, "content://%s/currency/%d/exchange/dates",
-                        AUTHORITY, currencyId)));
-            }
-            return loader;
+    private void displayContent(final boolean reload) {
+        if (reload) {
+            viewModel.reloadExchange(currencyId, selectedDate);
+            return;
         }
-
-        @Override
-        public void onLoadFinished(@NonNull final Loader<Cursor> loader, final Cursor data) {
-            int loaderId = loader.getId();
-            if (loaderId == CONTENT_LOADER_ID) {
-                onContentLoaded(data);
-            } else if (loaderId == DATES_LOADER_ID) {
-                onDatesLoaded(data);
-            }
-        }
-
-        @Override
-        public void onLoaderReset(@NonNull final Loader<Cursor> loader) { }
+        viewModel.getExchange(currencyId, selectedDate).observe(this, this::onContentLoaded);
     }
 }
