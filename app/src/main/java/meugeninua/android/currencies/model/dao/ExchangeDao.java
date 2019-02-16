@@ -1,32 +1,21 @@
 package meugeninua.android.currencies.model.dao;
 
-import android.database.Cursor;
-
 import java.util.List;
 
+import androidx.lifecycle.LiveData;
 import meugeninua.android.currencies.model.db.entities.Exchange;
 
 public interface ExchangeDao {
 
-    List<Exchange> getExchangesContent(int currencyId);
+    LiveData<List<Exchange>> getExchanges(int currencyId);
 
-    Cursor getExchangesCursor(int currencyId);
+    LiveData<Exchange> getExchangeById(int currencyId, int exchangeId);
 
-    Exchange getExchangeByIdContent(int currencyId, int exchangeId);
+    LiveData<Exchange> getLatestExchange(int currencyId);
 
-    Cursor getExchangeByIdCursor(int currencyId, int exchangeId);
+    LiveData<Exchange> getExchangeByDate(int currencyId, String date);
 
-    Exchange getLatestExchangeContent(int currencyId);
-
-    Cursor getLatestExchangeCursor(int currencyId);
-
-    Exchange getExchangeByDateContent(int currencyId, String date);
-
-    Cursor getExchangeByDateCursor(int currencyId, String date);
-
-    List<String> getExchangeDatesContent(int currencyId);
-
-    Cursor getExchangeDatesCursor(int currencyId);
+    LiveData<List<String>> getExchangeDates(int currencyId);
 
     int putExchanges(int currencyId, Exchange... exchanges);
 }

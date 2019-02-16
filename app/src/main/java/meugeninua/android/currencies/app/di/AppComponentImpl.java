@@ -83,6 +83,7 @@ public class AppComponentImpl implements AppComponent {
         if (currencyDao == null) {
             currencyDao = new CurrencyDaoImpl(
                     context.getContentResolver(),
+                    provideWorkerHandler(),
                     provideCurrencyMapper());
         }
         return currencyDao;
@@ -93,6 +94,7 @@ public class AppComponentImpl implements AppComponent {
         if (exchangeDao == null) {
             exchangeDao = new ExchangeDaoImpl(
                     context.getContentResolver(),
+                    provideWorkerHandler(),
                     provideExchangeMapper());
         }
         return exchangeDao;

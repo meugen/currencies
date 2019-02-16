@@ -1,20 +1,15 @@
 package meugeninua.android.currencies.model.dao;
 
-import android.database.Cursor;
-
 import java.util.List;
 
+import androidx.lifecycle.LiveData;
 import meugeninua.android.currencies.model.db.entities.Currency;
 
 public interface CurrencyDao {
 
-    List<Currency> getCurrenciesContent();
+    LiveData<List<Currency>> getCurrencies();
 
-    Cursor getCurrenciesCursor();
-
-    Currency getCurrencyByIdContent(int id);
-
-    Cursor getCurrencyByIdCursor(int id);
+    LiveData<Currency> getCurrencyById(int id);
 
     int putCurrencies(Currency... currencies);
 }

@@ -12,6 +12,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
 import meugeninua.android.currencies.R;
 import meugeninua.android.currencies.app.di.AppComponent;
 import meugeninua.android.currencies.model.db.entities.Currency;
@@ -40,6 +41,7 @@ public class CurrencyDetailsFragment extends BaseFragment<CurrencyDetailsBinding
     }
 
     private CurrencyDetailsViewModel viewModel;
+    private LiveData<Pair<Currency, Exchange>> exchangeLiveData;
 
     private List<String> dates;
     private String selectedDate;
@@ -93,7 +95,7 @@ public class CurrencyDetailsFragment extends BaseFragment<CurrencyDetailsBinding
     public void onDateSelected(final String date) {
         Log.d("CurrencyDetailsFrament", "onDateSelected(\"" + date + "\") method called");
         selectedDate = date;
-        displayContent(true);
+        displayContent();
     }
 
     @Override
@@ -116,14 +118,14 @@ public class CurrencyDetailsFragment extends BaseFragment<CurrencyDetailsBinding
 
     private void onDatesLoaded(final List<String> dates) {
         this.dates = dates;
-        displayContent(false);
+        displayContent();
     }
 
-    private void displayContent(final boolean reload) {
-        if (reload) {
-            viewModel.reloadExchange(currencyId, selectedDate);
-            return;
+    private void displayContent() {
+        if (exchangeLiveData != null) {
+            exchangeLiveData.removeObservers(this);
         }
-        viewModel.getExchange(currencyId, selectedDate).observe(this, this::onContentLoaded);
+        exchangeLiveData = viewModel.getExchange(currencyId, selectedDate);
+        exchangeLiveData.observe(this, this::onContentLoaded);
     }
 }

@@ -1,89 +1,57 @@
 package meugeninua.android.currencies.model.dao.impls;
 
 import android.content.ContentResolver;
-import android.database.Cursor;
 import android.net.Uri;
+import android.os.Handler;
 
 import java.util.List;
 import java.util.Locale;
 
+import androidx.lifecycle.LiveData;
 import meugeninua.android.currencies.model.dao.ExchangeDao;
 import meugeninua.android.currencies.model.db.entities.Exchange;
 import meugeninua.android.currencies.model.mappers.EntityMapper;
-import meugeninua.android.currencies.model.mappers.utils.MapperUtils;
 
-public class ExchangeDaoImpl extends AbstractDaoImpl<Exchange> implements ExchangeDao {
+public class ExchangeDaoImpl extends AbstractDaoImpl implements ExchangeDao {
 
     private final EntityMapper<Exchange> mapper;
 
-    public ExchangeDaoImpl(final ContentResolver resolver, final EntityMapper<Exchange> mapper) {
-        super(resolver);
+    public ExchangeDaoImpl(
+            final ContentResolver resolver,
+            final Handler workerHandler,
+            final EntityMapper<Exchange> mapper) {
+        super(resolver, workerHandler);
         this.mapper = mapper;
     }
 
     @Override
-    public List<Exchange> getExchangesContent(final int currencyId) {
-        try (Cursor cursor = getExchangesCursor(currencyId)) {
-            return mapper.cursorToEntityList(cursor);
-        }
-    }
-
-    @Override
-    public Cursor getExchangesCursor(int currencyId) {
+    public LiveData<List<Exchange>> getExchanges(int currencyId) {
         return queryUri(Uri.parse(String.format(Locale.ENGLISH, "content://%s/currency/%d/exchanges",
-                AUTHORITY, currencyId)));
+                AUTHORITY, currencyId))).buildEntityListLiveData(mapper);
     }
 
     @Override
-    public Exchange getExchangeByIdContent(final int currencyId, final int exchangeId) {
-        try (Cursor cursor = getExchangeByIdCursor(currencyId, exchangeId)) {
-            return mapper.cursorToSingleEntity(cursor);
-        }
-    }
-
-    @Override
-    public Cursor getExchangeByIdCursor(int currencyId, int exchangeId) {
+    public LiveData<Exchange> getExchangeById(int currencyId, int exchangeId) {
         return queryUri(Uri.parse(String.format(Locale.ENGLISH, "content://%s/currency/%d/exchange/id/%d",
-                AUTHORITY, currencyId, exchangeId)));
+                AUTHORITY, currencyId, exchangeId))).buildSingleEntityLiveData(mapper);
     }
 
     @Override
-    public Exchange getLatestExchangeContent(final int currencyId) {
-        try (Cursor cursor = getLatestExchangeCursor(currencyId)) {
-            return mapper.cursorToSingleEntity(cursor);
-        }
-    }
-
-    @Override
-    public Cursor getLatestExchangeCursor(int currencyId) {
+    public LiveData<Exchange> getLatestExchange(int currencyId) {
         return queryUri(Uri.parse(String.format(Locale.ENGLISH, "content://%s/currency/%d/exchange/latest",
-                AUTHORITY, currencyId)));
+                AUTHORITY, currencyId))).buildSingleEntityLiveData(mapper);
     }
 
     @Override
-    public Exchange getExchangeByDateContent(final int currencyId, final String date) {
-        try (Cursor cursor = getExchangeByDateCursor(currencyId, date)) {
-            return mapper.cursorToSingleEntity(cursor);
-        }
-    }
-
-    @Override
-    public Cursor getExchangeByDateCursor(int currencyId, String date) {
+    public LiveData<Exchange> getExchangeByDate(int currencyId, String date) {
         return queryUri(Uri.parse(String.format(Locale.ENGLISH, "content://%s/currency/%d/exchange/date/%s",
-                AUTHORITY, currencyId, date)));
+                AUTHORITY, currencyId, date))).buildSingleEntityLiveData(mapper);
     }
 
     @Override
-    public List<String> getExchangeDatesContent(int currencyId) {
-        try (Cursor cursor = getExchangeDatesCursor(currencyId)) {
-            return MapperUtils.cursorToStringList(cursor, FLD_EXCHANGE_DATE);
-        }
-    }
-
-    @Override
-    public Cursor getExchangeDatesCursor(int currencyId) {
+    public LiveData<List<String>> getExchangeDates(int currencyId) {
         return queryUri(Uri.parse(String.format(Locale.ENGLISH, "content://%s/currency/%d/exchange/dates",
-                AUTHORITY, currencyId)));
+                AUTHORITY, currencyId))).buildStringListLiveData(FLD_EXCHANGE_DATE);
     }
 
     @Override
