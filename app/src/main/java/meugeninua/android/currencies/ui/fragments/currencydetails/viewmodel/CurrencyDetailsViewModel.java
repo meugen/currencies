@@ -93,6 +93,10 @@ public class CurrencyDetailsViewModel extends ViewModel implements Injector {
     @Override
     protected void onCleared() {
         super.onCleared();
+        if (datesCursor != null) {
+            datesCursor.close();
+            datesCursor = null;
+        }
         if (currencyDetailsCursor != null) {
             currencyDetailsCursor.close();
             currencyDetailsCursor = null;
