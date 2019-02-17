@@ -10,7 +10,9 @@ public interface CurrencyDetailsBinding extends Binding {
 
     void setupDateSelectedCallback(OnDateSelectedListener listener);
 
-    void displayDates(List<String> dates, int position);
+    void displayDates(List<String> dates);
+
+    void setSelectedDate(String selectedDate);
 
     void displayContent(Currency currency, Exchange exchange);
 

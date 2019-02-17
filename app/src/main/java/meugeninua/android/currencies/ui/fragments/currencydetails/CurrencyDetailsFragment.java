@@ -43,7 +43,6 @@ public class CurrencyDetailsFragment extends BaseFragment<CurrencyDetailsBinding
     private CurrencyDetailsViewModel viewModel;
     private LiveData<Pair<Currency, Exchange>> exchangeLiveData;
 
-    private List<String> dates;
     private String selectedDate;
     private int currencyId;
 
@@ -67,7 +66,8 @@ public class CurrencyDetailsFragment extends BaseFragment<CurrencyDetailsBinding
             @NonNull final View view,
             @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.displayDates(Collections.emptyList(), 0);
+        binding.displayDates(Collections.emptyList());
+        binding.setSelectedDate(null);
         binding.setupDateSelectedCallback(this);
     }
 
@@ -107,23 +107,23 @@ public class CurrencyDetailsFragment extends BaseFragment<CurrencyDetailsBinding
 
     private void onContentLoaded(final Pair<Currency, Exchange> pair) {
         if (pair == null) {
-            binding.displayDates(dates, -1);
+            binding.setSelectedDate(null);
             binding.displayNoContent();
             return;
         }
-        binding.displayContent(
-                pair.first, pair.second);
-        binding.displayDates(dates, dates.indexOf(pair.second.exchangeDate));
+        binding.displayContent(pair.first, pair.second);
+        binding.setSelectedDate(pair.second.exchangeDate);
     }
 
     private void onDatesLoaded(final List<String> dates) {
-        this.dates = dates;
+        binding.displayDates(dates);
         displayContent();
     }
 
     private void displayContent() {
         if (exchangeLiveData != null) {
             exchangeLiveData.removeObservers(this);
+            viewModel.clearExchange();
         }
         exchangeLiveData = viewModel.getExchange(currencyId, selectedDate);
         exchangeLiveData.observe(this, this::onContentLoaded);

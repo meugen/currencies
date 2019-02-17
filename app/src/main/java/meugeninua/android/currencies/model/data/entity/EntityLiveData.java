@@ -6,15 +6,17 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
 
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;
+import meugeninua.android.currencies.model.data.utils.Clearable;
 import meugeninua.android.currencies.model.mappers.EntityMapper;
 
-public abstract class EntityLiveData<T> extends LiveData<T> {
+public abstract class EntityLiveData<T> extends LiveData<T> implements Clearable {
 
     private final ContentResolver resolver;
     private final Uri uri;
@@ -38,6 +40,7 @@ public abstract class EntityLiveData<T> extends LiveData<T> {
 
     @WorkerThread
     private void loadData() {
+        Log.d(getClass().getSimpleName(), "loadData() method called, uri = " + uri);
         if (cursor != null) {
             cursor.close();
         }
@@ -48,11 +51,14 @@ public abstract class EntityLiveData<T> extends LiveData<T> {
 
     @Override
     protected void onActive() {
-        workerHandler.post(this::loadData);
+        if (cursor == null) {
+            workerHandler.post(this::loadData);
+        }
     }
 
     @Override
-    protected void onInactive() {
+    public void clear() {
+        Log.d(getClass().getSimpleName(), "clear() method called, uri = " + uri);
         if (cursor !=  null) {
             cursor.close();
             cursor = null;
