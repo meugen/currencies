@@ -15,7 +15,6 @@ import meugeninua.android.currencies.R;
 import meugeninua.android.currencies.model.db.entities.Currency;
 import meugeninua.android.currencies.model.db.entities.Exchange;
 import meugeninua.android.currencies.ui.fragments.base.binding.BaseBinding;
-import meugeninua.android.currencies.ui.views.SmartSpinner;
 
 public class CurrencyDetailsBindingImpl extends BaseBinding implements CurrencyDetailsBinding {
 
@@ -50,7 +49,7 @@ public class CurrencyDetailsBindingImpl extends BaseBinding implements CurrencyD
     @Override
     public void setSelectedDate(final String selectedDate) {
         int position = datesAdapter.getPosition(selectedDate);
-        this.<SmartSpinner>get(R.id.exchange_date_value).setSelectionQuietly(position);
+        this.<Spinner>get(R.id.exchange_date_value).setSelection(position);
     }
 
     @Override
