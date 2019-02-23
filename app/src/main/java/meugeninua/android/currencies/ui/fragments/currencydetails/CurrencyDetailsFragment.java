@@ -1,14 +1,10 @@
 package meugeninua.android.currencies.ui.fragments.currencydetails;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import java.util.Collections;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,19 +13,18 @@ import meugeninua.android.currencies.R;
 import meugeninua.android.currencies.app.di.AppComponent;
 import meugeninua.android.currencies.model.db.entities.Currency;
 import meugeninua.android.currencies.model.db.entities.Exchange;
+import meugeninua.android.currencies.ui.dialogs.selectexchangedate.SelectExchangeDateDialog;
 import meugeninua.android.currencies.ui.fragments.base.BaseFragment;
 import meugeninua.android.currencies.ui.fragments.currencydetails.binding.CurrencyDetailsBinding;
 import meugeninua.android.currencies.ui.fragments.currencydetails.binding.CurrencyDetailsBindingImpl;
+import meugeninua.android.currencies.ui.fragments.currencydetails.view.CurrencyDetailsView;
 import meugeninua.android.currencies.ui.fragments.currencydetails.viewmodel.CurrencyDetailsViewModel;
 
 public class CurrencyDetailsFragment extends BaseFragment<CurrencyDetailsBinding>
-        implements CurrencyDetailsBinding.OnDateSelectedListener {
+        implements CurrencyDetailsView {
 
     private static final String ARG_CURRENCY_ID = "currency_id";
     private static final String ARG_SELECTED_DATE = "selected_date";
-
-    private static final int CONTENT_LOADER_ID = 1;
-    private static final int DATES_LOADER_ID = 2;
 
     public static CurrencyDetailsFragment build(final int currencyId) {
         Bundle args = new Bundle();
@@ -66,9 +61,7 @@ public class CurrencyDetailsFragment extends BaseFragment<CurrencyDetailsBinding
             @NonNull final View view,
             @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.displayDates(Collections.emptyList());
-        binding.setSelectedDate(null);
-        binding.setupDateSelectedCallback(this);
+        binding.setupListeners(this);
     }
 
     @Override
@@ -88,36 +81,34 @@ public class CurrencyDetailsFragment extends BaseFragment<CurrencyDetailsBinding
     @Override
     public void onStart() {
         super.onStart();
-        viewModel.getDates(currencyId).observe(this, this::onDatesLoaded);
+        displayContent();
     }
 
     @Override
-    public void onDateSelected(final String date) {
-        Log.d("CurrencyDetailsFrament", "onDateSelected(\"" + date + "\") method called");
-        selectedDate = date;
+    public void onChangeExchangeDate() {
+        SelectExchangeDateDialog.build(currencyId, selectedDate)
+                .show(getFragmentManager(), "select-exchange-date");
+    }
+
+    public void onExchangeDateChanged(final String exchangeDate) {
+        selectedDate = exchangeDate;
         displayContent();
     }
 
     @Override
     protected void inject(final AppComponent appComponent) {
         super.inject(appComponent);
-        binding = new CurrencyDetailsBindingImpl(getContext());
+        binding = new CurrencyDetailsBindingImpl();
         viewModel = getViewModel(appComponent.provideViewModelFactory(), CurrencyDetailsViewModel.class);
     }
 
     private void onContentLoaded(final Pair<Currency, Exchange> pair) {
         if (pair == null) {
-            binding.setSelectedDate(null);
             binding.displayNoContent();
             return;
         }
+        selectedDate = pair.second.exchangeDate;
         binding.displayContent(pair.first, pair.second);
-        binding.setSelectedDate(pair.second.exchangeDate);
-    }
-
-    private void onDatesLoaded(final List<String> dates) {
-        binding.displayDates(dates);
-        displayContent();
     }
 
     private void displayContent() {

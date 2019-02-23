@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/listPreferredItemHeight"
+    android:weightSum="1.0"
+    android:background="?selectableItemBackground">
+
+    <ImageView
+        android:layout_width="?attr/listPreferredItemHeight"
+        android:layout_height="match_parent"
+        android:src="@drawable/baseline_check_circle_black_24"
+        android:scaleType="centerInside"
+        android:id="@+id/icon_selected"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1.0"
+        android:textAppearance="?android:attr/textAppearanceListItem"
+        android:padding="@dimen/default_padding"
+        tools:text="01.01.2019"
+        android:gravity="center_vertical"
+        android:id="@+id/exchange_date"/>
+
+</LinearLayout>

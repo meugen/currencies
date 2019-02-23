@@ -12,15 +12,18 @@ import meugeninua.android.currencies.app.provider.Constants;
 import meugeninua.android.currencies.model.db.entities.Currency;
 import meugeninua.android.currencies.ui.activities.base.BaseActivity;
 import meugeninua.android.currencies.ui.activities.currencydetails.CurrencyDetailsActivity;
+import meugeninua.android.currencies.ui.dialogs.selectexchangedate.adapters.ExchangeDatesAdapter;
 import meugeninua.android.currencies.ui.fragments.currencies.CurrenciesFragment;
 import meugeninua.android.currencies.ui.fragments.currencies.adapters.CurrenciesAdapter;
 import meugeninua.android.currencies.ui.fragments.currencydetails.CurrencyDetailsFragment;
 import meugeninua.android.currencies.ui.fragments.message.MessageFragment;
 
 public class CurrenciesActivity extends BaseActivity implements Constants,
-        CurrenciesAdapter.OnCurrencyClickListener {
+        CurrenciesAdapter.OnCurrencyClickListener,
+        ExchangeDatesAdapter.OnExchangeDateChangedListener {
 
-    private static final String TAG_CURRENCIES_FRAGMENT = "currencies_fragment";
+    private static final String TAG_CURRENCIES_FRAGMENT = "currencies";
+    private static final String TAG_CURRENCY_DETAILS_FRAGMENT = "currency_details";
     private static final String ARG_CURRENT_CURRENCY_ID = "current_currency_id";
 
     private Integer currentCurrencyId;
@@ -58,6 +61,14 @@ public class CurrenciesActivity extends BaseActivity implements Constants,
         showCurrencyDetails(false);
     }
 
+    @Override
+    public void onExchangeDateChanged(final String date) {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG_CURRENCY_DETAILS_FRAGMENT);
+        if (fragment instanceof CurrencyDetailsFragment) {
+            ((CurrencyDetailsFragment) fragment).onExchangeDateChanged(date);
+        }
+    }
+
     private void showCurrencyDetails(final boolean fragmentOnly) {
         if (getResources().getBoolean(R.bool.display_details_in_currencies)) {
             Fragment fragment = currentCurrencyId == null
@@ -66,7 +77,7 @@ public class CurrenciesActivity extends BaseActivity implements Constants,
 
             FragmentManager manager = getSupportFragmentManager();
             manager.beginTransaction()
-                    .replace(R.id.currency_details_content, fragment)
+                    .replace(R.id.currency_details_content, fragment, TAG_CURRENCY_DETAILS_FRAGMENT)
                     .commit();
             return;
         }

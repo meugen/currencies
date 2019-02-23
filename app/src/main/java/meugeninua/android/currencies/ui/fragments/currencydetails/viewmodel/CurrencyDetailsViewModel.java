@@ -2,8 +2,6 @@ package meugeninua.android.currencies.ui.fragments.currencydetails.viewmodel;
 
 import android.util.Pair;
 
-import java.util.List;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 import meugeninua.android.currencies.app.di.AppComponent;
@@ -17,7 +15,6 @@ import meugeninua.android.currencies.model.db.entities.Exchange;
 
 public class CurrencyDetailsViewModel extends ViewModel implements Injector {
 
-    private LiveData<List<String>> datesLiveData;
     private LiveData<Pair<Currency, Exchange>> exchangePairLiveData;
 
     private CurrencyDao currencyDao;
@@ -39,13 +36,6 @@ public class CurrencyDetailsViewModel extends ViewModel implements Injector {
         exchangePairLiveData = null;
     }
 
-    public LiveData<List<String>> getDates(final int currencyId) {
-        if (datesLiveData == null) {
-            datesLiveData = exchangeDao.getExchangeDates(currencyId);
-        }
-        return datesLiveData;
-    }
-
     @Override
     public void inject(final AppComponent appComponent) {
         exchangeDao = appComponent.provideExchangeDao();
@@ -54,6 +44,6 @@ public class CurrencyDetailsViewModel extends ViewModel implements Injector {
 
     @Override
     protected void onCleared() {
-        LiveDataUtils.clearLiveDataIfNeeded(datesLiveData, exchangePairLiveData);
+        LiveDataUtils.clearLiveDataIfNeeded(exchangePairLiveData);
     }
 }

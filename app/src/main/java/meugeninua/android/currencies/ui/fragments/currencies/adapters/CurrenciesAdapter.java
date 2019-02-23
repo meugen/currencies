@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.lang.ref.WeakReference;
+
 import androidx.annotation.NonNull;
 import androidx.core.util.ObjectsCompat;
 import androidx.recyclerview.widget.DiffUtil;
@@ -45,20 +47,36 @@ public class CurrenciesAdapter extends CursorAdapter<Currency, CurrenciesAdapter
         private final TextView codeView;
         private final TextView nameView;
 
-        private Currency currency;
-
         CurrencyHolder(@NonNull final View itemView, final OnCurrencyClickListener listener) {
             super(itemView);
             this.codeView = itemView.findViewById(R.id.currency_code);
             this.nameView = itemView.findViewById(R.id.currency_name);
 
-            itemView.setOnClickListener(v -> listener.onCurrencyClick(currency));
+            itemView.setOnClickListener(new CurrencyClickListener(listener));
         }
 
         void bind(final Currency currency) {
-            this.currency = currency;
+            itemView.setTag(currency);
             codeView.setText(currency.code);
             nameView.setText(currency.name);
+        }
+    }
+
+    static class CurrencyClickListener implements View.OnClickListener {
+
+        private final WeakReference<OnCurrencyClickListener> listenerRef;
+
+        CurrencyClickListener(final OnCurrencyClickListener listener) {
+            this.listenerRef = new WeakReference<>(listener);
+        }
+
+        @Override
+        public void onClick(final View view) {
+            OnCurrencyClickListener listener = listenerRef.get();
+            if (listener == null) {
+                return;
+            }
+            listener.onCurrencyClick((Currency) view.getTag());
         }
     }
 
