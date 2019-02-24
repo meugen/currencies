@@ -9,7 +9,8 @@ import meugeninua.android.currencies.ui.fragments.currencies.adapters.Currencies
 public interface CurrenciesBinding extends Binding {
 
     void setupRecycler(
-            CurrenciesAdapter.OnCurrencyClickListener listener);
+            CurrenciesAdapter.OnCurrencyClickListener listener,
+            int spanCountResId);
 
     void setContent(List<Currency> currencies);
 }

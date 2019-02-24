@@ -5,28 +5,19 @@ import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.os.Bundle;
 
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import meugeninua.android.currencies.R;
 import meugeninua.android.currencies.app.provider.Constants;
 import meugeninua.android.currencies.model.db.entities.Currency;
 import meugeninua.android.currencies.ui.activities.base.BaseActivity;
 import meugeninua.android.currencies.ui.activities.currencydetails.CurrencyDetailsActivity;
-import meugeninua.android.currencies.ui.dialogs.selectexchangedate.adapters.ExchangeDatesAdapter;
 import meugeninua.android.currencies.ui.fragments.currencies.CurrenciesFragment;
 import meugeninua.android.currencies.ui.fragments.currencies.adapters.CurrenciesAdapter;
-import meugeninua.android.currencies.ui.fragments.currencydetails.CurrencyDetailsFragment;
-import meugeninua.android.currencies.ui.fragments.message.MessageFragment;
 
 public class CurrenciesActivity extends BaseActivity implements Constants,
-        CurrenciesAdapter.OnCurrencyClickListener,
-        ExchangeDatesAdapter.OnExchangeDateChangedListener {
+        CurrenciesAdapter.OnCurrencyClickListener {
 
     private static final String TAG_CURRENCIES_FRAGMENT = "currencies";
-    private static final String TAG_CURRENCY_DETAILS_FRAGMENT = "currency_details";
-    private static final String ARG_CURRENT_CURRENCY_ID = "current_currency_id";
-
-    private Integer currentCurrencyId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,56 +25,19 @@ public class CurrenciesActivity extends BaseActivity implements Constants,
         setupSync();
         setContentView(R.layout.activity_currencies);
 
-        if (savedInstanceState != null && savedInstanceState.containsKey(ARG_CURRENT_CURRENCY_ID)) {
-            currentCurrencyId = savedInstanceState.getInt(ARG_CURRENT_CURRENCY_ID);
-        }
-
         FragmentManager manager = getSupportFragmentManager();
         if (manager.findFragmentByTag(TAG_CURRENCIES_FRAGMENT) == null) {
+            CurrenciesFragment fragment = CurrenciesFragment
+                    .build(R.integer.activity_currencies_currencies_list_span_count);
             manager.beginTransaction()
-                    .replace(R.id.currencies_content, new CurrenciesFragment(), TAG_CURRENCIES_FRAGMENT)
+                    .replace(R.id.currencies_content, fragment, TAG_CURRENCIES_FRAGMENT)
                     .commit();
-        }
-        showCurrencyDetails(true);
-    }
-
-    @Override
-    protected void onSaveInstanceState(final Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (currentCurrencyId != null) {
-            outState.putInt(ARG_CURRENT_CURRENCY_ID, currentCurrencyId);
         }
     }
 
     @Override
     public void onCurrencyClick(Currency currency) {
-        currentCurrencyId = currency.id;
-        showCurrencyDetails(false);
-    }
-
-    @Override
-    public void onExchangeDateChanged(final String date) {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG_CURRENCY_DETAILS_FRAGMENT);
-        if (fragment instanceof CurrencyDetailsFragment) {
-            ((CurrencyDetailsFragment) fragment).onExchangeDateChanged(date);
-        }
-    }
-
-    private void showCurrencyDetails(final boolean fragmentOnly) {
-        if (getResources().getBoolean(R.bool.display_details_in_currencies)) {
-            Fragment fragment = currentCurrencyId == null
-                    ? MessageFragment.build(R.string.message_no_content)
-                    : CurrencyDetailsFragment.build(currentCurrencyId);
-
-            FragmentManager manager = getSupportFragmentManager();
-            manager.beginTransaction()
-                    .replace(R.id.currency_details_content, fragment, TAG_CURRENCY_DETAILS_FRAGMENT)
-                    .commit();
-            return;
-        }
-        if (!fragmentOnly && currentCurrencyId != null) {
-            startActivity(CurrencyDetailsActivity.build(this, currentCurrencyId));
-        }
+        startActivity(CurrencyDetailsActivity.build(this, currency.id));
     }
 
     private void setupSync() {

@@ -15,6 +15,7 @@ import meugeninua.android.currencies.model.db.entities.Currency;
 import meugeninua.android.currencies.model.db.entities.Exchange;
 import meugeninua.android.currencies.ui.dialogs.selectexchangedate.SelectExchangeDateDialog;
 import meugeninua.android.currencies.ui.fragments.base.BaseFragment;
+import meugeninua.android.currencies.ui.fragments.base.utils.FragmentUtils;
 import meugeninua.android.currencies.ui.fragments.currencydetails.binding.CurrencyDetailsBinding;
 import meugeninua.android.currencies.ui.fragments.currencydetails.binding.CurrencyDetailsBindingImpl;
 import meugeninua.android.currencies.ui.fragments.currencydetails.view.CurrencyDetailsView;
@@ -45,6 +46,9 @@ public class CurrencyDetailsFragment extends BaseFragment<CurrencyDetailsBinding
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.currencyId = getArguments().getInt(ARG_CURRENCY_ID);
+        if (savedInstanceState != null) {
+            selectedDate = savedInstanceState.getString(ARG_SELECTED_DATE);
+        }
     }
 
     @Nullable
@@ -67,21 +71,13 @@ public class CurrencyDetailsFragment extends BaseFragment<CurrencyDetailsBinding
     @Override
     public void onActivityCreated(@Nullable final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-            selectedDate = savedInstanceState.getString(ARG_SELECTED_DATE);
-        }
+        displayContent();
     }
 
     @Override
     public void onSaveInstanceState(@NonNull final Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(ARG_SELECTED_DATE, selectedDate);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        displayContent();
     }
 
     @Override
@@ -99,7 +95,8 @@ public class CurrencyDetailsFragment extends BaseFragment<CurrencyDetailsBinding
     protected void inject(final AppComponent appComponent) {
         super.inject(appComponent);
         binding = new CurrencyDetailsBindingImpl();
-        viewModel = getViewModel(appComponent.provideViewModelFactory(), CurrencyDetailsViewModel.class);
+        viewModel = FragmentUtils.getViewModel(this,
+                appComponent.provideViewModelFactory(), CurrencyDetailsViewModel.class);
     }
 
     private void onContentLoaded(final Pair<Currency, Exchange> pair) {

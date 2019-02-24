@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <bool name="display_details_in_currencies">true</bool>
+    <bool name="display_currencies_in_details">true</bool>
 </resources>

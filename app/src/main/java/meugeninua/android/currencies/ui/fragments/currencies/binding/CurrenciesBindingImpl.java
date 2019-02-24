@@ -5,6 +5,7 @@ import android.content.Context;
 import java.util.List;
 
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import meugeninua.android.currencies.R;
@@ -24,9 +25,11 @@ public class CurrenciesBindingImpl extends BaseBinding implements CurrenciesBind
 
     @Override
     public void setupRecycler(
-            final CurrenciesAdapter.OnCurrencyClickListener listener) {
+            final CurrenciesAdapter.OnCurrencyClickListener listener,
+            final int spanCountResId) {
         RecyclerView recycler = get(R.id.recycler);
-        recycler.setLayoutManager(new LinearLayoutManager(context));
+        recycler.setLayoutManager(new GridLayoutManager(context,
+                context.getResources().getInteger(spanCountResId)));
         recycler.addItemDecoration(new DividerItemDecoration(context,
                 DividerItemDecoration.VERTICAL));
         adapter = new CurrenciesAdapter(context, listener);

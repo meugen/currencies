@@ -17,6 +17,7 @@ import meugeninua.android.currencies.ui.dialogs.selectexchangedate.adapters.Exch
 import meugeninua.android.currencies.ui.dialogs.selectexchangedate.binding.SelectExchangeDateBinding;
 import meugeninua.android.currencies.ui.dialogs.selectexchangedate.binding.SelectExchangeDateBindingImpl;
 import meugeninua.android.currencies.ui.dialogs.selectexchangedate.viewmodel.SelectExchangeDateViewModel;
+import meugeninua.android.currencies.ui.fragments.base.utils.FragmentUtils;
 
 public class SelectExchangeDateDialog extends BaseBottomSheetDialogFragment<SelectExchangeDateBinding>
         implements ExchangeDatesAdapter.OnExchangeDateChangedListener {
@@ -100,7 +101,7 @@ public class SelectExchangeDateDialog extends BaseBottomSheetDialogFragment<Sele
     protected void inject(final AppComponent appComponent) {
         super.inject(appComponent);
         this.binding = new SelectExchangeDateBindingImpl(getContext());
-        this.viewModel = getViewModel(appComponent.provideViewModelFactory(),
-                SelectExchangeDateViewModel.class);
+        this.viewModel = FragmentUtils.getViewModel(this,
+                appComponent.provideViewModelFactory(), SelectExchangeDateViewModel.class);
     }
 }

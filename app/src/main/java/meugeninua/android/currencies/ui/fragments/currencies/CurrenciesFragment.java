@@ -14,12 +14,24 @@ import meugeninua.android.currencies.R;
 import meugeninua.android.currencies.app.di.AppComponent;
 import meugeninua.android.currencies.model.db.entities.Currency;
 import meugeninua.android.currencies.ui.fragments.base.BaseFragment;
+import meugeninua.android.currencies.ui.fragments.base.utils.FragmentUtils;
 import meugeninua.android.currencies.ui.fragments.currencies.adapters.CurrenciesAdapter;
 import meugeninua.android.currencies.ui.fragments.currencies.binding.CurrenciesBinding;
 import meugeninua.android.currencies.ui.fragments.currencies.binding.CurrenciesBindingImpl;
 import meugeninua.android.currencies.ui.fragments.currencies.viewmodel.CurrenciesViewModel;
 
 public class CurrenciesFragment extends BaseFragment<CurrenciesBinding> {
+
+    private static final String ARG_SPAN_COUNT_RES_ID = "span_count_res_id";
+
+    public static CurrenciesFragment build(final int spanCountResId) {
+        Bundle args = new Bundle();
+        args.putInt(ARG_SPAN_COUNT_RES_ID, spanCountResId);
+
+        CurrenciesFragment fragment = new CurrenciesFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     private CurrenciesAdapter.OnCurrencyClickListener listener;
     private CurrenciesViewModel viewModel;
@@ -47,24 +59,26 @@ public class CurrenciesFragment extends BaseFragment<CurrenciesBinding> {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        viewModel.getCurrencies().observe(this, this::onContentLoaded);
-    }
-
-    @Override
     public void onViewCreated(
             @NonNull final View view,
             @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.setupRecycler(listener);
+        int spanCountResId = getArguments().getInt(ARG_SPAN_COUNT_RES_ID);
+        binding.setupRecycler(listener, spanCountResId);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable final Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        viewModel.getCurrencies().observe(this, this::onContentLoaded);
     }
 
     @Override
     protected void inject(final AppComponent appComponent) {
         super.inject(appComponent);
         binding = new CurrenciesBindingImpl(getContext());
-        viewModel = getViewModel(appComponent.provideViewModelFactory(), CurrenciesViewModel.class);
+        viewModel = FragmentUtils.getViewModel(this,
+                appComponent.provideViewModelFactory(), CurrenciesViewModel.class);
     }
 
     private void onContentLoaded(final List<Currency> currencies) {
