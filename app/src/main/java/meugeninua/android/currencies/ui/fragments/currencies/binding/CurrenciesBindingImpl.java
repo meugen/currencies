@@ -6,7 +6,6 @@ import java.util.List;
 
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import meugeninua.android.currencies.R;
 import meugeninua.android.currencies.model.db.entities.Currency;
