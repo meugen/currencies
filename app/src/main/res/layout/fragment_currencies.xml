@@ -5,4 +5,5 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/recycler"
-    tools:listitem="@layout/item_currency"/>
+    tools:listitem="@layout/item_currency"
+    android:background="?android:attr/windowBackground"/>

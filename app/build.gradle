@@ -38,6 +38,7 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:${versions.androidx.recyclerview}"
     implementation "androidx.lifecycle:lifecycle-extensions:${versions.androidx.lifecycle}"
     implementation "androidx.constraintlayout:constraintlayout:${versions.androidx.constraintlayout}"
+    implementation "androidx.drawerlayout:drawerlayout:${versions.androidx.drawerlayout}"
 
     implementation "com.google.android.material:material:${versions.material}"
 
