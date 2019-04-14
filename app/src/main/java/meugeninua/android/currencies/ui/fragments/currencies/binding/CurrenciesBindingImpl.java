@@ -39,4 +39,10 @@ public class CurrenciesBindingImpl extends BaseBinding implements CurrenciesBind
     public void setContent(final List<Currency> currencies) {
         adapter.swapContent(currencies);
     }
+
+    @Override
+    public void detachView() {
+        super.detachView();
+        adapter = null;
+    }
 }

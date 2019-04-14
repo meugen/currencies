@@ -3,6 +3,8 @@ package meugeninua.android.currencies.app;
 import android.app.Application;
 import android.content.Context;
 
+import com.squareup.leakcanary.LeakCanary;
+
 import androidx.annotation.MainThread;
 import meugeninua.android.currencies.app.di.AppComponent;
 import meugeninua.android.currencies.app.di.AppComponentImpl;
@@ -23,5 +25,14 @@ public class CurrenciesApp extends Application {
             appComponent = new AppComponentImpl(this);
         }
         return appComponent;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            return;
+        }
+        LeakCanary.install(this);
     }
 }

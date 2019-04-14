@@ -5,6 +5,7 @@ import android.view.View;
 
 import java.lang.ref.WeakReference;
 
+import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -13,14 +14,16 @@ public abstract class BaseBinding implements Binding {
     private WeakReference<View> rootViewRef;
     private SparseArray<WeakReference<View>> childrenViewRefs;
 
+    @CallSuper
     @Override
-    public final void attachView(final View view) {
+    public void attachView(final View view) {
         rootViewRef = new WeakReference<>(view);
         childrenViewRefs = new SparseArray<>();
     }
 
+    @CallSuper
     @Override
-    public final void detachView() {
+    public void detachView() {
         rootViewRef = null;
         childrenViewRefs = null;
     }
