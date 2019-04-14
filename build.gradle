@@ -7,7 +7,7 @@ buildscript {
         
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.1'
+        classpath 'com.android.tools.build:gradle:3.3.2'
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.6'
         
         // NOTE: Do not place your application dependencies here; they belong
@@ -17,7 +17,8 @@ buildscript {
 
 ext.versions = [
         'okhttp': '3.12.1',
-        'material': '1.0.0'
+        'material': '1.0.0',
+        'leakcanary': '1.6.3'
 ]
 ext.versions.androidx = [
         'appcompat': '1.0.2',

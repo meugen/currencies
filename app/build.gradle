@@ -45,7 +45,11 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:${versions.okhttp}"
     debugImplementation "com.squareup.okhttp3:logging-interceptor:${versions.okhttp}"
 
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:${versions.leakcanary}"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${versions.leakcanary}"
+    debugImplementation "com.squareup.leakcanary:leakcanary-support-fragment:${versions.leakcanary}"
+
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 }
