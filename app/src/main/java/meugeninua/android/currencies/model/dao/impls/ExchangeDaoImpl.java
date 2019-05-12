@@ -11,17 +11,21 @@ import androidx.lifecycle.LiveData;
 import meugeninua.android.currencies.model.dao.ExchangeDao;
 import meugeninua.android.currencies.model.db.entities.Exchange;
 import meugeninua.android.currencies.model.mappers.EntityMapper;
+import meugeninua.android.currencies.model.operations.ExchangeOperations;
 
 public class ExchangeDaoImpl extends AbstractDaoImpl implements ExchangeDao {
 
     private final EntityMapper<Exchange> mapper;
+    private final ExchangeOperations exchangeOperations;
 
     public ExchangeDaoImpl(
             final ContentResolver resolver,
             final Handler workerHandler,
-            final EntityMapper<Exchange> mapper) {
+            final EntityMapper<Exchange> mapper,
+            final ExchangeOperations exchangeOperations) {
         super(resolver, workerHandler);
         this.mapper = mapper;
+        this.exchangeOperations = exchangeOperations;
     }
 
     @Override
@@ -56,8 +60,6 @@ public class ExchangeDaoImpl extends AbstractDaoImpl implements ExchangeDao {
 
     @Override
     public int putExchanges(final int currencyId, final Exchange... exchanges) {
-        Uri uri = Uri.parse(String.format(Locale.ENGLISH, "content://%s/currency/%d/exchanges",
-                AUTHORITY, currencyId));
-        return putEntities(uri, exchanges, mapper);
+        return putEntities(exchangeOperations.putExchanges(currencyId, exchanges));
     }
 }

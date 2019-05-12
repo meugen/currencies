@@ -1,5 +1,7 @@
 package meugeninua.android.currencies.model.dao;
 
+import android.content.ContentProviderOperation;
+
 import java.util.List;
 
 import androidx.lifecycle.LiveData;

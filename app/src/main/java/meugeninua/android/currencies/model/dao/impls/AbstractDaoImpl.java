@@ -1,13 +1,18 @@
 package meugeninua.android.currencies.model.dao.impls;
 
+import android.content.ContentProviderOperation;
+import android.content.ContentProviderResult;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Handler;
 
+import java.util.List;
+
 import meugeninua.android.currencies.app.provider.Constants;
 import meugeninua.android.currencies.model.data.entity.EntityLiveData;
 import meugeninua.android.currencies.model.mappers.EntityMapper;
+import meugeninua.android.currencies.model.utils.Utils;
 
 abstract class AbstractDaoImpl implements Constants {
 
@@ -28,11 +33,18 @@ abstract class AbstractDaoImpl implements Constants {
                 .withWorkerHandler(workerHandler);
     }
 
-    final <T> int putEntities(final Uri uri, final T[] entities, final EntityMapper<T> mapper) {
-        ContentValues[] values = new ContentValues[entities.length];
-        for (int i = 0; i < entities.length; i++) {
-            values[i] = mapper.entityToValues(entities[i]);
+    final <T> int putEntities(final List<ContentProviderOperation> operations) {
+        try {
+            ContentProviderResult[] results = resolver.applyBatch(AUTHORITY,
+                    Utils.toArrayList(operations));
+
+            int count = 0;
+            for (ContentProviderResult result : results) {
+                count += result.count == null ? 0 : result.count;
+            }
+            return count;
+        } catch (Exception e) {
+            throw new UnsupportedOperationException(e);
         }
-        return resolver.bulkInsert(uri, values);
     }
 }

@@ -11,6 +11,8 @@ import meugeninua.android.currencies.model.dao.ExchangeDao;
 import meugeninua.android.currencies.model.db.entities.Currency;
 import meugeninua.android.currencies.model.db.entities.Exchange;
 import meugeninua.android.currencies.model.mappers.EntityMapper;
+import meugeninua.android.currencies.model.operations.CurrencyOperations;
+import meugeninua.android.currencies.model.operations.ExchangeOperations;
 import meugeninua.android.currencies.model.readers.EntityReader;
 import okhttp3.OkHttpClient;
 
@@ -25,6 +27,10 @@ public interface AppComponent {
     EntityMapper<Currency> provideCurrencyMapper();
 
     EntityMapper<Exchange> provideExchangeMapper();
+
+    CurrencyOperations provideCurrencyOperations();
+
+    ExchangeOperations provideExchangeOperations();
 
     CurrencyDao provideCurrencyDao();
 

@@ -19,6 +19,10 @@ import meugeninua.android.currencies.model.db.entities.Exchange;
 import meugeninua.android.currencies.model.mappers.EntityMapper;
 import meugeninua.android.currencies.model.mappers.impls.CurrencyMapperImpl;
 import meugeninua.android.currencies.model.mappers.impls.ExchangeMapperImpl;
+import meugeninua.android.currencies.model.operations.CurrencyOperations;
+import meugeninua.android.currencies.model.operations.ExchangeOperations;
+import meugeninua.android.currencies.model.operations.impls.CurrencyOperationsImpl;
+import meugeninua.android.currencies.model.operations.impls.ExchangeOperationsImpl;
 import meugeninua.android.currencies.model.readers.EntityReader;
 import meugeninua.android.currencies.model.readers.impls.CurrencyExchangePairReader;
 import okhttp3.OkHttpClient;
@@ -31,6 +35,8 @@ public class AppComponentImpl implements AppComponent {
     private EntityReader<Pair<Currency, Exchange>> currencyExchangePairReader;
     private EntityMapper<Currency> currencyConverter;
     private EntityMapper<Exchange> exchangeConverter;
+    private CurrencyOperations currencyOperations;
+    private ExchangeOperations exchangeOperations;
     private CurrencyDao currencyDao;
     private ExchangeDao exchangeDao;
     private OkHttpClient okHttpClient;
@@ -79,12 +85,29 @@ public class AppComponentImpl implements AppComponent {
     }
 
     @Override
+    public CurrencyOperations provideCurrencyOperations() {
+        if (currencyOperations == null) {
+            currencyOperations = new CurrencyOperationsImpl(provideCurrencyMapper());
+        }
+        return currencyOperations;
+    }
+
+    @Override
+    public ExchangeOperations provideExchangeOperations() {
+        if (exchangeOperations == null) {
+            exchangeOperations = new ExchangeOperationsImpl(provideExchangeMapper());
+        }
+        return exchangeOperations;
+    }
+
+    @Override
     public CurrencyDao provideCurrencyDao() {
         if (currencyDao == null) {
             currencyDao = new CurrencyDaoImpl(
                     context.getContentResolver(),
                     provideWorkerHandler(),
-                    provideCurrencyMapper());
+                    provideCurrencyMapper(),
+                    provideCurrencyOperations());
         }
         return currencyDao;
     }
@@ -95,7 +118,8 @@ public class AppComponentImpl implements AppComponent {
             exchangeDao = new ExchangeDaoImpl(
                     context.getContentResolver(),
                     provideWorkerHandler(),
-                    provideExchangeMapper());
+                    provideExchangeMapper(),
+                    provideExchangeOperations());
         }
         return exchangeDao;
     }
