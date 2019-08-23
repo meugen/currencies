@@ -10,8 +10,6 @@ import android.content.Context;
 import android.content.SyncResult;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.util.Pair;
 
@@ -37,8 +35,6 @@ import okhttp3.Response;
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     private static final String SYNC_URL = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange";
-
-    private final Handler handler = new Handler(Looper.getMainLooper());
 
     private final OkHttpClient client;
     private final CurrencyDao currencyDao;
