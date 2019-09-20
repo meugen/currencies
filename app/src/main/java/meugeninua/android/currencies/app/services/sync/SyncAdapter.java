@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.List;
 
 import meugeninua.android.currencies.R;
+import meugeninua.android.currencies.app.CurrenciesApp;
 import meugeninua.android.currencies.app.di.AppComponent;
 import meugeninua.android.currencies.app.di.ComponentInjector;
 import meugeninua.android.currencies.model.db.entities.Currency;
@@ -53,6 +54,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter implements Componen
 
     SyncAdapter(final Context context) {
         super(context.getApplicationContext(), true);
+        CurrenciesApp.inject(this);
     }
 
     @NonNull
