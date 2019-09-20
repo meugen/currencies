@@ -1,20 +1,22 @@
 package meugeninua.android.currencies.app;
 
 import android.app.Application;
-import android.content.Context;
+
+import androidx.annotation.MainThread;
 
 import com.squareup.leakcanary.LeakCanary;
 
-import androidx.annotation.MainThread;
 import meugeninua.android.currencies.app.di.AppComponent;
 import meugeninua.android.currencies.app.di.AppComponentImpl;
+import meugeninua.android.currencies.app.di.ComponentInjector;
 
 public class CurrenciesApp extends Application {
 
     @MainThread
-    public static AppComponent appComponent(final Context context) {
-        CurrenciesApp app = (CurrenciesApp) context.getApplicationContext();
-        return app.getAppComponent();
+    public static void inject(final ComponentInjector injector) {
+        CurrenciesApp app = (CurrenciesApp) injector.requireContext()
+                .getApplicationContext();
+        injector.inject(app.getAppComponent());
     }
 
     private AppComponent appComponent;

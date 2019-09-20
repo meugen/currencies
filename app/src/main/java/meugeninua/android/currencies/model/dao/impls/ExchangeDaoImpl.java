@@ -4,10 +4,11 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.os.Handler;
 
+import androidx.lifecycle.LiveData;
+
 import java.util.List;
 import java.util.Locale;
 
-import androidx.lifecycle.LiveData;
 import meugeninua.android.currencies.model.dao.ExchangeDao;
 import meugeninua.android.currencies.model.db.entities.Exchange;
 import meugeninua.android.currencies.model.mappers.EntityMapper;

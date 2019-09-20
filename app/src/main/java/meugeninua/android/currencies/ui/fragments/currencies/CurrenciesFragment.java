@@ -6,21 +6,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import java.util.List;
+
 import meugeninua.android.currencies.R;
+import meugeninua.android.currencies.app.CurrenciesApp;
 import meugeninua.android.currencies.app.di.AppComponent;
+import meugeninua.android.currencies.app.di.ComponentInjector;
 import meugeninua.android.currencies.model.db.entities.Currency;
-import meugeninua.android.currencies.ui.fragments.base.BaseFragment;
-import meugeninua.android.currencies.ui.fragments.base.utils.FragmentUtils;
 import meugeninua.android.currencies.ui.fragments.currencies.adapters.CurrenciesAdapter;
 import meugeninua.android.currencies.ui.fragments.currencies.binding.CurrenciesBinding;
 import meugeninua.android.currencies.ui.fragments.currencies.binding.CurrenciesBindingImpl;
 import meugeninua.android.currencies.ui.fragments.currencies.viewmodel.CurrenciesViewModel;
 
-public class CurrenciesFragment extends BaseFragment<CurrenciesBinding> {
+public class CurrenciesFragment extends Fragment implements ComponentInjector {
 
     private static final String ARG_SPAN_COUNT_RES_ID = "span_count_res_id";
 
@@ -33,6 +35,7 @@ public class CurrenciesFragment extends BaseFragment<CurrenciesBinding> {
         return fragment;
     }
 
+    private CurrenciesBinding binding;
     private CurrenciesAdapter.OnCurrencyClickListener listener;
     private CurrenciesViewModel viewModel;
 
@@ -40,6 +43,12 @@ public class CurrenciesFragment extends BaseFragment<CurrenciesBinding> {
     public void onAttach(final Context context) {
         super.onAttach(context);
         listener = (CurrenciesAdapter.OnCurrencyClickListener) context;
+    }
+
+    @Override
+    public void onCreate(@Nullable final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        CurrenciesApp.inject(this);
     }
 
     @Override
@@ -74,11 +83,10 @@ public class CurrenciesFragment extends BaseFragment<CurrenciesBinding> {
     }
 
     @Override
-    protected void inject(final AppComponent appComponent) {
-        super.inject(appComponent);
-        binding = new CurrenciesBindingImpl(getContext());
-        viewModel = FragmentUtils.getViewModel(this,
-                appComponent.provideViewModelFactory(), CurrenciesViewModel.class);
+    public void inject(final AppComponent appComponent) {
+        binding = new CurrenciesBindingImpl(this);
+        viewModel = appComponent.provideViewModel(this,
+                CurrenciesViewModel.class);
     }
 
     private void onContentLoaded(final List<Currency> currencies) {

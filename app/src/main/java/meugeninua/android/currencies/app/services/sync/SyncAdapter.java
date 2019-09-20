@@ -15,6 +15,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
@@ -23,12 +27,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
 import meugeninua.android.currencies.R;
 import meugeninua.android.currencies.app.di.AppComponent;
-import meugeninua.android.currencies.model.dao.CurrencyDao;
-import meugeninua.android.currencies.model.dao.ExchangeDao;
+import meugeninua.android.currencies.app.di.ComponentInjector;
 import meugeninua.android.currencies.model.db.entities.Currency;
 import meugeninua.android.currencies.model.db.entities.Exchange;
 import meugeninua.android.currencies.model.operations.CurrencyOperations;
@@ -40,22 +41,32 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class SyncAdapter extends AbstractThreadedSyncAdapter {
+public class SyncAdapter extends AbstractThreadedSyncAdapter implements ComponentInjector {
 
     private static final String TAG = SyncAdapter.class.getSimpleName();
     private static final String SYNC_URL = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange";
 
-    private final OkHttpClient httpClient;
-    private final CurrencyOperations currencyOperations;
-    private final ExchangeOperations exchangeOperations;
-    private final EntityReader<Pair<Currency, Exchange>> currencyExchangePairReader;
+    private OkHttpClient httpClient;
+    private CurrencyOperations currencyOperations;
+    private ExchangeOperations exchangeOperations;
+    private EntityReader<Pair<Currency, Exchange>> currencyExchangePairReader;
 
-    SyncAdapter(final AppComponent appComponent) {
-        super(appComponent.provideAppContext(), true);
-        this.httpClient = appComponent.provideOkHttpClient();
-        this.currencyOperations = appComponent.provideCurrencyOperations();
-        this.exchangeOperations = appComponent.provideExchangeOperations();
-        this.currencyExchangePairReader = appComponent.provideCurrencyExchangePairReader();
+    SyncAdapter(final Context context) {
+        super(context.getApplicationContext(), true);
+    }
+
+    @NonNull
+    @Override
+    public Context requireContext() {
+        return getContext();
+    }
+
+    @Override
+    public void inject(final AppComponent appComponent) {
+        httpClient = appComponent.provideOkHttpClient();
+        currencyOperations = appComponent.provideCurrencyOperations();
+        exchangeOperations = appComponent.provideExchangeOperations();
+        currencyExchangePairReader = appComponent.provideCurrencyExchangePairReader();
     }
 
     @Override

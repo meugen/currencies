@@ -8,11 +8,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import androidx.annotation.WorkerThread;
+import androidx.lifecycle.LiveData;
+
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-import androidx.annotation.WorkerThread;
-import androidx.lifecycle.LiveData;
 import meugeninua.android.currencies.model.data.utils.Clearable;
 import meugeninua.android.currencies.model.mappers.EntityMapper;
 

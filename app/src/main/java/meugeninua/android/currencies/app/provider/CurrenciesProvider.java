@@ -10,15 +10,17 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import java.util.List;
 import java.util.Locale;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import meugeninua.android.currencies.app.CurrenciesApp;
 import meugeninua.android.currencies.app.di.AppComponent;
+import meugeninua.android.currencies.app.di.ComponentInjector;
 
-public class CurrenciesProvider extends ContentProvider implements Constants {
+public class CurrenciesProvider extends ContentProvider implements Constants, ComponentInjector {
 
     private static final int MATCH_CURRENCIES = 1;
     private static final int MATCH_CURRENCY_ID = 2;
@@ -32,16 +34,25 @@ public class CurrenciesProvider extends ContentProvider implements Constants {
 
     private UriMatcher matcher;
 
+    @NonNull
     @Override
-    public void attachInfo(final Context context, final ProviderInfo info) {
-        AppComponent appComponent = CurrenciesApp.appComponent(context);
-        this.database = appComponent.provideDatabase();
+    public Context requireContext() {
+        Context context = getContext();
+        if (context == null) {
+            throw new IllegalStateException("Context is not attached yet");
+        }
+        return context;
+    }
 
-        super.attachInfo(context, info);
+    @Override
+    public void inject(final AppComponent appComponent) {
+        this.database = appComponent.provideDatabase();
     }
 
     @Override
     public boolean onCreate() {
+        CurrenciesApp.inject(this);
+
         matcher = new UriMatcher(UriMatcher.NO_MATCH);
         matcher.addURI(AUTHORITY, "currencies", MATCH_CURRENCIES);
         matcher.addURI(AUTHORITY, "currency/#", MATCH_CURRENCY_ID);

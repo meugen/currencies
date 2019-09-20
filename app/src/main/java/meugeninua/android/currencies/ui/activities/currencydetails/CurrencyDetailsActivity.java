@@ -9,20 +9,21 @@ import android.view.MenuItem;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
 import meugeninua.android.currencies.R;
 import meugeninua.android.currencies.model.db.entities.Currency;
-import meugeninua.android.currencies.ui.activities.base.BaseActivity;
 import meugeninua.android.currencies.ui.dialogs.selectexchangedate.adapters.ExchangeDatesAdapter;
 import meugeninua.android.currencies.ui.fragments.currencies.CurrenciesFragment;
 import meugeninua.android.currencies.ui.fragments.currencies.adapters.CurrenciesAdapter;
 import meugeninua.android.currencies.ui.fragments.currencydetails.CurrencyDetailsFragment;
 
-public class CurrencyDetailsActivity extends BaseActivity implements
+public class CurrencyDetailsActivity extends AppCompatActivity implements
         ExchangeDatesAdapter.OnExchangeDateChangedListener,
         CurrenciesAdapter.OnCurrencyClickListener {
 

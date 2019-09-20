@@ -6,12 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.lang.ref.WeakReference;
-
 import androidx.annotation.NonNull;
 import androidx.core.util.ObjectsCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.lang.ref.WeakReference;
+
 import meugeninua.android.currencies.R;
 import meugeninua.android.currencies.model.db.entities.Currency;
 import meugeninua.android.currencies.ui.fragments.base.adapters.CursorAdapter;

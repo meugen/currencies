@@ -1,9 +1,10 @@
 package meugeninua.android.currencies.ui.dialogs.selectexchangedate.viewmodel;
 
-import java.util.List;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
+
+import java.util.List;
+
 import meugeninua.android.currencies.app.di.AppComponent;
 import meugeninua.android.currencies.app.di.Injector;
 import meugeninua.android.currencies.model.dao.ExchangeDao;

@@ -5,7 +5,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.util.Pair;
 
-import androidx.lifecycle.ViewModelProvider;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModel;
+
 import meugeninua.android.currencies.model.dao.CurrencyDao;
 import meugeninua.android.currencies.model.dao.ExchangeDao;
 import meugeninua.android.currencies.model.db.entities.Currency;
@@ -38,7 +40,7 @@ public interface AppComponent {
 
     OkHttpClient provideOkHttpClient();
 
-    ViewModelProvider.Factory provideViewModelFactory();
+    <VM extends ViewModel> VM provideViewModel(Fragment fragment, Class<VM> clazz);
 
     Handler provideWorkerHandler();
 }
