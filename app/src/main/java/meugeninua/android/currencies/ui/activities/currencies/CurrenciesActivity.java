@@ -5,16 +5,17 @@ import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
+
 import meugeninua.android.currencies.R;
 import meugeninua.android.currencies.app.provider.Constants;
 import meugeninua.android.currencies.model.db.entities.Currency;
-import meugeninua.android.currencies.ui.activities.base.BaseActivity;
 import meugeninua.android.currencies.ui.activities.currencydetails.CurrencyDetailsActivity;
 import meugeninua.android.currencies.ui.fragments.currencies.CurrenciesFragment;
 import meugeninua.android.currencies.ui.fragments.currencies.adapters.CurrenciesAdapter;
 
-public class CurrenciesActivity extends BaseActivity implements Constants,
+public class CurrenciesActivity extends AppCompatActivity implements Constants,
         CurrenciesAdapter.OnCurrencyClickListener {
 
     private static final String TAG_CURRENCIES_FRAGMENT = "currencies";

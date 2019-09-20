@@ -2,11 +2,13 @@ package meugeninua.android.currencies.ui.dialogs.selectexchangedate.binding;
 
 import android.content.Context;
 
-import java.util.List;
-
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
+
 import meugeninua.android.currencies.R;
 import meugeninua.android.currencies.ui.dialogs.selectexchangedate.adapters.ExchangeDatesAdapter;
 import meugeninua.android.currencies.ui.fragments.base.binding.BaseBinding;
@@ -16,8 +18,9 @@ public class SelectExchangeDateBindingImpl extends BaseBinding implements Select
     private final Context context;
     private ExchangeDatesAdapter adapter;
 
-    public SelectExchangeDateBindingImpl(final Context context) {
-        this.context = context;
+    public SelectExchangeDateBindingImpl(final Fragment fragment) {
+        super(fragment);
+        this.context = fragment.getContext();
     }
 
     @Override

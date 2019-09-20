@@ -3,7 +3,6 @@ package meugeninua.android.currencies.model.dao.impls;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Handler;
 
@@ -11,7 +10,6 @@ import java.util.List;
 
 import meugeninua.android.currencies.app.provider.Constants;
 import meugeninua.android.currencies.model.data.entity.EntityLiveData;
-import meugeninua.android.currencies.model.mappers.EntityMapper;
 import meugeninua.android.currencies.model.utils.Utils;
 
 abstract class AbstractDaoImpl implements Constants {

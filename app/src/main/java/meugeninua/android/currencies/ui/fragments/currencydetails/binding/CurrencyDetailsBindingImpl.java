@@ -3,6 +3,8 @@ package meugeninua.android.currencies.ui.fragments.currencydetails.binding;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+
 import java.lang.ref.WeakReference;
 import java.text.NumberFormat;
 
@@ -15,6 +17,10 @@ import meugeninua.android.currencies.ui.fragments.currencydetails.view.CurrencyD
 public class CurrencyDetailsBindingImpl extends BaseBinding implements CurrencyDetailsBinding {
 
     private final NumberFormat formatter = NumberFormat.getCurrencyInstance();
+
+    public CurrencyDetailsBindingImpl(final Fragment fragment) {
+        super(fragment);
+    }
 
     @Override
     public void setupListeners(final CurrencyDetailsView view) {

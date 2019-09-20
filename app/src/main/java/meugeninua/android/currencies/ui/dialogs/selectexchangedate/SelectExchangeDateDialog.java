@@ -6,21 +6,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+
+import java.util.List;
+
 import meugeninua.android.currencies.R;
+import meugeninua.android.currencies.app.CurrenciesApp;
 import meugeninua.android.currencies.app.di.AppComponent;
-import meugeninua.android.currencies.ui.dialogs.base.BaseBottomSheetDialogFragment;
+import meugeninua.android.currencies.app.di.ComponentInjector;
 import meugeninua.android.currencies.ui.dialogs.selectexchangedate.adapters.ExchangeDatesAdapter;
 import meugeninua.android.currencies.ui.dialogs.selectexchangedate.binding.SelectExchangeDateBinding;
 import meugeninua.android.currencies.ui.dialogs.selectexchangedate.binding.SelectExchangeDateBindingImpl;
 import meugeninua.android.currencies.ui.dialogs.selectexchangedate.viewmodel.SelectExchangeDateViewModel;
-import meugeninua.android.currencies.ui.fragments.base.utils.FragmentUtils;
 
-public class SelectExchangeDateDialog extends BaseBottomSheetDialogFragment<SelectExchangeDateBinding>
-        implements ExchangeDatesAdapter.OnExchangeDateChangedListener {
+public class SelectExchangeDateDialog extends BottomSheetDialogFragment
+        implements ExchangeDatesAdapter.OnExchangeDateChangedListener, ComponentInjector {
 
     private static final String ARG_CURRENCY_ID = "currency_id";
     private static final String ARG_SELECTED_DATE = "selected_date";
@@ -37,6 +40,7 @@ public class SelectExchangeDateDialog extends BaseBottomSheetDialogFragment<Sele
     }
 
     private ExchangeDatesAdapter.OnExchangeDateChangedListener listener;
+    private SelectExchangeDateBinding binding;
 
     private int currencyId;
     private String selectedDate;
@@ -58,6 +62,8 @@ public class SelectExchangeDateDialog extends BaseBottomSheetDialogFragment<Sele
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CurrenciesApp.inject(this);
+
         Bundle args = getArguments();
         this.currencyId = args.getInt(ARG_CURRENCY_ID);
         this.selectedDate = args.getString(ARG_SELECTED_DATE);
@@ -98,10 +104,9 @@ public class SelectExchangeDateDialog extends BaseBottomSheetDialogFragment<Sele
     }
 
     @Override
-    protected void inject(final AppComponent appComponent) {
-        super.inject(appComponent);
-        this.binding = new SelectExchangeDateBindingImpl(getContext());
-        this.viewModel = FragmentUtils.getViewModel(this,
-                appComponent.provideViewModelFactory(), SelectExchangeDateViewModel.class);
+    public void inject(final AppComponent appComponent) {
+        this.binding = new SelectExchangeDateBindingImpl(this);
+        this.viewModel = appComponent.provideViewModel(this,
+                SelectExchangeDateViewModel.class);
     }
 }

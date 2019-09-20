@@ -7,7 +7,11 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.util.Pair;
 
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
+
 import meugeninua.android.currencies.app.conf.BuildConfigurator;
 import meugeninua.android.currencies.model.dao.CurrencyDao;
 import meugeninua.android.currencies.model.dao.ExchangeDao;
@@ -139,11 +143,12 @@ public class AppComponentImpl implements AppComponent {
     }
 
     @Override
-    public ViewModelProvider.Factory provideViewModelFactory() {
+    public <VM extends ViewModel> VM provideViewModel(
+            final Fragment fragment, final Class<VM> clazz) {
         if (viewModelFactory == null) {
             viewModelFactory = new InjectViewModelFactory(this);
         }
-        return viewModelFactory;
+        return ViewModelProviders.of(fragment, viewModelFactory).get(clazz);
     }
 
     @Override

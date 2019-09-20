@@ -3,27 +3,50 @@ package meugeninua.android.currencies.ui.fragments.base.binding;
 import android.util.SparseArray;
 import android.view.View;
 
-import java.lang.ref.WeakReference;
-
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.OnLifecycleEvent;
 
-public abstract class BaseBinding implements Binding {
+import java.lang.ref.WeakReference;
 
+public abstract class BaseBinding implements Binding, LifecycleObserver, Observer<LifecycleOwner> {
+
+    private final Fragment fragment;
     private WeakReference<View> rootViewRef;
     private SparseArray<WeakReference<View>> childrenViewRefs;
 
-    @CallSuper
+    protected BaseBinding(final Fragment fragment) {
+        this.fragment = fragment;
+        fragment.getViewLifecycleOwnerLiveData()
+                .observeForever(this);
+    }
+
     @Override
-    public void attachView(final View view) {
+    public final void onChanged(final LifecycleOwner lifecycleOwner) {
+        onAttachView(fragment.getView());
+        lifecycleOwner.getLifecycle().addObserver(this);
+        fragment.getViewLifecycleOwnerLiveData().removeObserver(this);
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    public final void onDestroyView() {
+        onDetachView();
+    }
+
+    @CallSuper
+    protected void onAttachView(final View view) {
         rootViewRef = new WeakReference<>(view);
         childrenViewRefs = new SparseArray<>();
     }
 
     @CallSuper
-    @Override
-    public void detachView() {
+    protected void onDetachView() {
         rootViewRef = null;
         childrenViewRefs = null;
     }

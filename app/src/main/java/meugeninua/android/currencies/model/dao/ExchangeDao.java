@@ -1,8 +1,9 @@
 package meugeninua.android.currencies.model.dao;
 
+import androidx.lifecycle.LiveData;
+
 import java.util.List;
 
-import androidx.lifecycle.LiveData;
 import meugeninua.android.currencies.model.db.entities.Exchange;
 
 public interface ExchangeDao {

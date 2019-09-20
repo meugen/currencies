@@ -2,11 +2,13 @@ package meugeninua.android.currencies.ui.fragments.currencies.binding;
 
 import android.content.Context;
 
-import java.util.List;
-
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
+
 import meugeninua.android.currencies.R;
 import meugeninua.android.currencies.model.db.entities.Currency;
 import meugeninua.android.currencies.ui.fragments.base.binding.BaseBinding;
@@ -18,8 +20,9 @@ public class CurrenciesBindingImpl extends BaseBinding implements CurrenciesBind
 
     private CurrenciesAdapter adapter;
 
-    public CurrenciesBindingImpl(final Context context) {
-        this.context = context;
+    public CurrenciesBindingImpl(final Fragment fragment) {
+        super(fragment);
+        this.context = fragment.getContext();
     }
 
     @Override
@@ -41,8 +44,8 @@ public class CurrenciesBindingImpl extends BaseBinding implements CurrenciesBind
     }
 
     @Override
-    public void detachView() {
-        super.detachView();
+    public void onDetachView() {
+        super.onDetachView();
         adapter = null;
     }
 }
