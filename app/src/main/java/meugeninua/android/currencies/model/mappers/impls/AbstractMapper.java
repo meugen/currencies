@@ -7,7 +7,7 @@ import java.util.List;
 
 import meugeninua.android.currencies.model.mappers.EntityMapper;
 
-abstract class AbstractMapperImpl<T> implements EntityMapper<T> {
+abstract class AbstractMapper<T> implements EntityMapper<T> {
 
     @Override
     public final List<T> cursorToEntityList(final Cursor cursor) {

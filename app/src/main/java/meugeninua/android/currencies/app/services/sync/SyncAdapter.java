@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import meugeninua.android.currencies.app.di.AppComponent;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
@@ -29,7 +30,6 @@ import java.util.List;
 
 import meugeninua.android.currencies.R;
 import meugeninua.android.currencies.app.CurrenciesApp;
-import meugeninua.android.currencies.app.di.AppComponent;
 import meugeninua.android.currencies.app.di.ComponentInjector;
 import meugeninua.android.currencies.model.db.entities.Currency;
 import meugeninua.android.currencies.model.db.entities.Exchange;
@@ -65,10 +65,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter implements Componen
 
     @Override
     public void inject(final AppComponent appComponent) {
-        httpClient = appComponent.provideOkHttpClient();
-        currencyOperations = appComponent.provideCurrencyOperations();
-        exchangeOperations = appComponent.provideExchangeOperations();
-        currencyExchangePairReader = appComponent.provideCurrencyExchangePairReader();
+        httpClient = appComponent.okHttpClient.get();
+        currencyOperations = appComponent.currencyOperations.get();
+        exchangeOperations = appComponent.exchangeOperations.get();
+        currencyExchangePairReader = appComponent.currencyExchangePairReader.get();
     }
 
     @Override

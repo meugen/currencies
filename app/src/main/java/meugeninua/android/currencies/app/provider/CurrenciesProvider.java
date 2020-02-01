@@ -5,7 +5,6 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
-import android.content.pm.ProviderInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -46,7 +45,7 @@ public class CurrenciesProvider extends ContentProvider implements Constants, Co
 
     @Override
     public void inject(final AppComponent appComponent) {
-        this.database = appComponent.provideDatabase();
+        this.database = appComponent.database.get();
     }
 
     @Override

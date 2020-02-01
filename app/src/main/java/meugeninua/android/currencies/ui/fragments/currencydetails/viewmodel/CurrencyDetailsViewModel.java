@@ -39,8 +39,8 @@ public class CurrencyDetailsViewModel extends ViewModel implements Injector {
 
     @Override
     public void inject(final AppComponent appComponent) {
-        exchangeDao = appComponent.provideExchangeDao();
-        currencyDao = appComponent.provideCurrencyDao();
+        exchangeDao = appComponent.exchangeDao.get();
+        currencyDao = appComponent.currencyDao.get();
     }
 
     @Override

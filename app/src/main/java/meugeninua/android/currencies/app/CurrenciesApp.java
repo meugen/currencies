@@ -7,7 +7,6 @@ import androidx.annotation.MainThread;
 import com.squareup.leakcanary.LeakCanary;
 
 import meugeninua.android.currencies.app.di.AppComponent;
-import meugeninua.android.currencies.app.di.AppComponentImpl;
 import meugeninua.android.currencies.app.di.ComponentInjector;
 
 public class CurrenciesApp extends Application {
@@ -24,7 +23,7 @@ public class CurrenciesApp extends Application {
     @MainThread
     private AppComponent getAppComponent() {
         if (appComponent == null) {
-            appComponent = new AppComponentImpl(this);
+            appComponent = new AppComponent(this);
         }
         return appComponent;
     }

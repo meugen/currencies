@@ -31,6 +31,6 @@ public class SelectExchangeDateViewModel extends ViewModel implements Injector {
 
     @Override
     public void inject(final AppComponent appComponent) {
-        this.exchangeDao = appComponent.provideExchangeDao();
+        this.exchangeDao = appComponent.exchangeDao.get();
     }
 }
