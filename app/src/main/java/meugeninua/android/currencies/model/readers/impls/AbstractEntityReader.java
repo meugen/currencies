@@ -1,7 +1,7 @@
 package meugeninua.android.currencies.model.readers.impls;
 
 import android.util.Xml;
-
+import meugeninua.android.currencies.model.readers.EntityReader;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
-
-import meugeninua.android.currencies.model.readers.EntityReader;
 
 abstract class AbstractEntityReader<T> implements EntityReader<T> {
 

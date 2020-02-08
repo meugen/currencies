@@ -1,11 +1,10 @@
 package meugeninua.android.currencies.model.mappers.impls;
 
 import android.database.Cursor;
+import meugeninua.android.currencies.model.mappers.EntityMapper;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import meugeninua.android.currencies.model.mappers.EntityMapper;
 
 abstract class AbstractMapper<T> implements EntityMapper<T> {
 

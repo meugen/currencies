@@ -1,9 +1,9 @@
 package meugeninua.android.currencies.ui.dialogs.selectexchangedate.binding;
 
-import java.util.List;
-
 import meugeninua.android.currencies.ui.dialogs.selectexchangedate.adapters.ExchangeDatesAdapter;
 import meugeninua.android.currencies.ui.fragments.base.binding.Binding;
+
+import java.util.List;
 
 public interface SelectExchangeDateBinding extends Binding {
 

@@ -2,14 +2,13 @@ package meugeninua.android.currencies.model.operations.impls;
 
 import android.content.ContentProviderOperation;
 import android.net.Uri;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import meugeninua.android.currencies.app.provider.Constants;
 import meugeninua.android.currencies.model.db.entities.Currency;
 import meugeninua.android.currencies.model.mappers.EntityMapper;
 import meugeninua.android.currencies.model.operations.CurrencyOperations;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CurrencyOperationsImpl implements CurrencyOperations, Constants {
 

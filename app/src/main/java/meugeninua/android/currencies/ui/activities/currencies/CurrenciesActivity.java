@@ -1,21 +1,15 @@
 package meugeninua.android.currencies.ui.activities.currencies;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.content.ContentResolver;
 import android.os.Bundle;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
-
 import meugeninua.android.currencies.R;
-import meugeninua.android.currencies.app.provider.Constants;
 import meugeninua.android.currencies.model.db.entities.Currency;
 import meugeninua.android.currencies.ui.activities.currencydetails.CurrencyDetailsActivity;
 import meugeninua.android.currencies.ui.fragments.currencies.CurrenciesFragment;
 import meugeninua.android.currencies.ui.fragments.currencies.adapters.CurrenciesAdapter;
 
-public class CurrenciesActivity extends AppCompatActivity implements Constants,
+public class CurrenciesActivity extends AppCompatActivity implements
         CurrenciesAdapter.OnCurrencyClickListener {
 
     private static final String TAG_CURRENCIES_FRAGMENT = "currencies";
@@ -23,7 +17,6 @@ public class CurrenciesActivity extends AppCompatActivity implements Constants,
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setupSync();
         setContentView(R.layout.activity_currencies);
 
         FragmentManager manager = getSupportFragmentManager();
@@ -39,16 +32,5 @@ public class CurrenciesActivity extends AppCompatActivity implements Constants,
     @Override
     public void onCurrencyClick(Currency currency) {
         startActivity(CurrencyDetailsActivity.build(this, currency.id));
-    }
-
-    private void setupSync() {
-        Account account = new Account(ACCOUNT, ACCOUNT_TYPE);
-        AccountManager manager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
-        manager.addAccountExplicitly(account, null, null);
-
-        ContentResolver.setIsSyncable(account, AUTHORITY, 1);
-        ContentResolver.setSyncAutomatically(account, AUTHORITY, true);
-        ContentResolver.addPeriodicSync(account, AUTHORITY,
-                Bundle.EMPTY, SYNC_INTERVAL);
     }
 }

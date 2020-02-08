@@ -1,10 +1,8 @@
 package meugeninua.android.currencies.ui.fragments.currencydetails.viewmodel;
 
 import android.util.Pair;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
-
 import meugeninua.android.currencies.app.di.AppComponent;
 import meugeninua.android.currencies.app.di.Injector;
 import meugeninua.android.currencies.model.dao.CurrencyDao;

@@ -1,7 +1,6 @@
 package meugeninua.android.currencies.ui.fragments.base.binding;
 
 import android.view.View;
-
 import androidx.annotation.NonNull;
 
 public interface Binding {

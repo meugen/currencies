@@ -2,7 +2,6 @@ package meugeninua.android.currencies.model.mappers.impls;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-
 import meugeninua.android.currencies.app.provider.Constants;
 import meugeninua.android.currencies.model.db.entities.Currency;
 

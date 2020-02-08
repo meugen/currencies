@@ -3,16 +3,14 @@ package meugeninua.android.currencies.model.dao.impls;
 import android.content.ContentResolver;
 import android.net.Uri;
 import android.os.Handler;
-
 import androidx.lifecycle.LiveData;
-
-import java.util.List;
-import java.util.Locale;
-
 import meugeninua.android.currencies.model.dao.ExchangeDao;
 import meugeninua.android.currencies.model.db.entities.Exchange;
 import meugeninua.android.currencies.model.mappers.EntityMapper;
 import meugeninua.android.currencies.model.operations.ExchangeOperations;
+
+import java.util.List;
+import java.util.Locale;
 
 public class ExchangeDaoImpl extends AbstractDaoImpl implements ExchangeDao {
 

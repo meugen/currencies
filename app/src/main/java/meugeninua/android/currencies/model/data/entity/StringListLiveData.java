@@ -4,10 +4,9 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
+import meugeninua.android.currencies.model.mappers.utils.MapperUtils;
 
 import java.util.List;
-
-import meugeninua.android.currencies.model.mappers.utils.MapperUtils;
 
 class StringListLiveData extends EntityLiveData<List<String>> {
 

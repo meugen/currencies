@@ -1,10 +1,9 @@
 package meugeninua.android.currencies.model.dao;
 
 import androidx.lifecycle.LiveData;
+import meugeninua.android.currencies.model.db.entities.Currency;
 
 import java.util.List;
-
-import meugeninua.android.currencies.model.db.entities.Currency;
 
 public interface CurrencyDao {
 

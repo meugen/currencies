@@ -1,14 +1,12 @@
 package meugeninua.android.currencies.model.readers.impls;
 
 import android.util.Pair;
-
+import meugeninua.android.currencies.model.db.entities.Currency;
+import meugeninua.android.currencies.model.db.entities.Exchange;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
-
-import meugeninua.android.currencies.model.db.entities.Currency;
-import meugeninua.android.currencies.model.db.entities.Exchange;
 
 public class CurrencyExchangePairReader extends AbstractEntityReader<Pair<Currency, Exchange>> {
 

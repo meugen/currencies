@@ -5,14 +5,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-
-import java.util.List;
-
 import meugeninua.android.currencies.R;
 import meugeninua.android.currencies.app.CurrenciesApp;
 import meugeninua.android.currencies.app.di.AppComponent;
@@ -21,6 +16,8 @@ import meugeninua.android.currencies.ui.dialogs.selectexchangedate.adapters.Exch
 import meugeninua.android.currencies.ui.dialogs.selectexchangedate.binding.SelectExchangeDateBinding;
 import meugeninua.android.currencies.ui.dialogs.selectexchangedate.binding.SelectExchangeDateBindingImpl;
 import meugeninua.android.currencies.ui.dialogs.selectexchangedate.viewmodel.SelectExchangeDateViewModel;
+
+import java.util.List;
 
 public class SelectExchangeDateDialog extends BottomSheetDialogFragment
         implements ExchangeDatesAdapter.OnExchangeDateChangedListener, ComponentInjector {

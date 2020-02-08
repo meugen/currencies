@@ -2,17 +2,15 @@ package meugeninua.android.currencies.ui.fragments.currencydetails.binding;
 
 import android.view.View;
 import android.widget.TextView;
-
 import androidx.fragment.app.Fragment;
-
-import java.lang.ref.WeakReference;
-import java.text.NumberFormat;
-
 import meugeninua.android.currencies.R;
 import meugeninua.android.currencies.model.db.entities.Currency;
 import meugeninua.android.currencies.model.db.entities.Exchange;
 import meugeninua.android.currencies.ui.fragments.base.binding.BaseBinding;
 import meugeninua.android.currencies.ui.fragments.currencydetails.view.CurrencyDetailsView;
+
+import java.lang.ref.WeakReference;
+import java.text.NumberFormat;
 
 public class CurrencyDetailsBindingImpl extends BaseBinding implements CurrencyDetailsBinding {
 

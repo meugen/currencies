@@ -1,23 +1,17 @@
 package meugeninua.android.currencies.app.provider;
 
-import android.content.ContentProvider;
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.UriMatcher;
+import android.content.*;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import java.util.List;
-import java.util.Locale;
-
 import meugeninua.android.currencies.app.CurrenciesApp;
 import meugeninua.android.currencies.app.di.AppComponent;
 import meugeninua.android.currencies.app.di.ComponentInjector;
+
+import java.util.List;
+import java.util.Locale;
 
 public class CurrenciesProvider extends ContentProvider implements Constants, ComponentInjector {
 

@@ -1,36 +1,23 @@
-package meugeninua.android.currencies.app.services.sync;
+package meugeninua.android.currencies.app.workers;
 
-import android.accounts.Account;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.AbstractThreadedSyncAdapter;
-import android.content.ContentProviderClient;
 import android.content.ContentProviderOperation;
-import android.content.ContentProviderResult;
+import android.content.ContentResolver;
 import android.content.Context;
-import android.content.SyncResult;
 import android.os.Build;
-import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
-
-import meugeninua.android.currencies.app.di.AppComponent;
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
 import meugeninua.android.currencies.R;
-import meugeninua.android.currencies.app.CurrenciesApp;
-import meugeninua.android.currencies.app.di.ComponentInjector;
+import meugeninua.android.currencies.app.di.AppComponent;
+import meugeninua.android.currencies.app.di.Injector;
+import meugeninua.android.currencies.app.provider.Constants;
 import meugeninua.android.currencies.model.db.entities.Currency;
 import meugeninua.android.currencies.model.db.entities.Exchange;
 import meugeninua.android.currencies.model.operations.CurrencyOperations;
@@ -41,10 +28,17 @@ import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.xmlpull.v1.XmlPullParserException;
 
-public class SyncAdapter extends AbstractThreadedSyncAdapter implements ComponentInjector {
+import java.io.IOException;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-    private static final String TAG = SyncAdapter.class.getSimpleName();
+public class SyncWorker extends Worker implements Injector, Constants {
+
+    private static final String TAG = SyncWorker.class.getSimpleName();
     private static final String SYNC_URL = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange";
 
     private OkHttpClient httpClient;
@@ -52,52 +46,37 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter implements Componen
     private ExchangeOperations exchangeOperations;
     private EntityReader<Pair<Currency, Exchange>> currencyExchangePairReader;
 
-    SyncAdapter(final Context context) {
-        super(context.getApplicationContext(), true);
-        CurrenciesApp.inject(this);
-    }
-
-    @NonNull
-    @Override
-    public Context requireContext() {
-        return getContext();
+    public SyncWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+        super(context, workerParams);
     }
 
     @Override
-    public void inject(final AppComponent appComponent) {
+    public void inject(AppComponent appComponent) {
         httpClient = appComponent.okHttpClient.get();
         currencyOperations = appComponent.currencyOperations.get();
         exchangeOperations = appComponent.exchangeOperations.get();
         currencyExchangePairReader = appComponent.currencyExchangePairReader.get();
     }
 
+    @NonNull
     @Override
-    public void onPerformSync(
-            final Account account, final Bundle extras, final String authority,
-            final ContentProviderClient providerClient, final SyncResult syncResult) {
+    public Result doWork() {
         try {
             Request request = new Request.Builder()
                     .get().url(SYNC_URL).build();
             List<ContentProviderOperation> operations = processCall(httpClient.newCall(request));
-            ContentProviderResult[] results =  providerClient.applyBatch(Utils.toArrayList(operations));
-            for (ContentProviderResult result : results) {
-                syncResult.stats.numInserts += result.count == null ? 0 : result.count;
-            }
+            ContentResolver resolver = getApplicationContext().getContentResolver();
+            resolver.applyBatch(AUTHORITY, Utils.toArrayList(operations));
             showNotification();
-        } catch (IOException e) {
-            syncResult.stats.numIoExceptions++;
-            Log.e(TAG, e.getMessage(), e);
-        } catch (XmlPullParserException e) {
-            syncResult.stats.numParseExceptions++;
-            Log.e(TAG, e.getMessage(), e);
+            return Result.success();
         } catch (Exception e) {
-            syncResult.stats.numAuthExceptions++;
             Log.e(TAG, e.getMessage(), e);
+            return Result.retry();
         }
     }
 
     private void showNotification() {
-        final Context context = getContext();
+        final Context context = getApplicationContext();
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("sync",

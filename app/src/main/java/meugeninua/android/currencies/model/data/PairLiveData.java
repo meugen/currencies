@@ -1,10 +1,8 @@
 package meugeninua.android.currencies.model.data;
 
 import android.util.Pair;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
-
 import meugeninua.android.currencies.model.data.utils.Clearable;
 import meugeninua.android.currencies.model.data.utils.LiveDataUtils;
 

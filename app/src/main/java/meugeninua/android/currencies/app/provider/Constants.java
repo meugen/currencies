@@ -5,10 +5,8 @@ import java.util.concurrent.TimeUnit;
 public interface Constants {
 
     String AUTHORITY = "meugeninua.android.currencies";
-    String ACCOUNT_TYPE = "meugeninua.android.currencies";
-    String ACCOUNT = "currencies";
 
-    long SYNC_INTERVAL = TimeUnit.HOURS.toSeconds(1);
+    long SYNC_INTERVAL_SECONDS = TimeUnit.HOURS.toSeconds(1);
 
     String TBL_CURRENCIES = "currencies";
     String TBL_EXCHANGES = "exchanges";

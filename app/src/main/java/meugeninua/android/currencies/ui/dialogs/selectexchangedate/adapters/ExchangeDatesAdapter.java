@@ -6,16 +6,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.core.util.ObjectsCompat;
 import androidx.recyclerview.widget.RecyclerView;
+import meugeninua.android.currencies.R;
 
 import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.List;
-
-import meugeninua.android.currencies.R;
 
 public class ExchangeDatesAdapter extends RecyclerView.Adapter<ExchangeDatesAdapter.ExchangeDateHolder> {
 

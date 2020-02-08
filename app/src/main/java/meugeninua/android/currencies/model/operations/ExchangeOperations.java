@@ -1,10 +1,9 @@
 package meugeninua.android.currencies.model.operations;
 
 import android.content.ContentProviderOperation;
+import meugeninua.android.currencies.model.db.entities.Exchange;
 
 import java.util.List;
-
-import meugeninua.android.currencies.model.db.entities.Exchange;
 
 public interface ExchangeOperations {
 

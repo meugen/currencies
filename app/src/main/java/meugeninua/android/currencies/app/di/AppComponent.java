@@ -6,12 +6,12 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.util.Pair;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-
+import androidx.work.Configuration;
+import androidx.work.WorkManager;
 import meugeninua.android.currencies.app.conf.BuildConfigurator;
 import meugeninua.android.currencies.model.dao.CurrencyDao;
 import meugeninua.android.currencies.model.dao.ExchangeDao;
@@ -35,6 +35,7 @@ public class AppComponent {
 
     private final Context context;
 
+    public final SingleInstance<WorkManager> workManager;
     public final SingleInstance<SQLiteDatabase> database;
     public final SingleInstance<EntityReader<Pair<Currency, Exchange>>> currencyExchangePairReader;
     public final SingleInstance<EntityMapper<Currency>> currencyMapper;
@@ -50,6 +51,7 @@ public class AppComponent {
     public AppComponent(final Context context) {
         this.context = context;
 
+        workManager = new LazySingleInstance<>(this::createWorkManager);
         database = new LazySingleInstance<>(this::createDatabase);
         currencyExchangePairReader = new LazySingleInstance<>(CurrencyExchangePairReader::new);
         currencyMapper = new LazySingleInstance<>(CurrencyMapper::new);
@@ -70,6 +72,15 @@ public class AppComponent {
     public <VM extends ViewModel> VM provideViewModel(
             final Fragment fragment, final Class<VM> clazz) {
         return new ViewModelProvider(fragment, viewModelFactory.get()).get(clazz);
+    }
+
+    @NonNull
+    private WorkManager createWorkManager() {
+        Configuration configuration = new Configuration.Builder()
+                .setWorkerFactory(new InjectWorkerFactory(this))
+                .build();
+        WorkManager.initialize(context, configuration);
+        return WorkManager.getInstance(context);
     }
 
     @NonNull

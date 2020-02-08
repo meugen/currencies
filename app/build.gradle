@@ -39,6 +39,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:${versions.androidx.lifecycle}"
     implementation "androidx.constraintlayout:constraintlayout:${versions.androidx.constraintlayout}"
     implementation "androidx.drawerlayout:drawerlayout:${versions.androidx.drawerlayout}"
+    implementation "androidx.work:work-runtime:${versions.androidx.work}"
 
     implementation "com.google.android.material:material:${versions.material}"
 

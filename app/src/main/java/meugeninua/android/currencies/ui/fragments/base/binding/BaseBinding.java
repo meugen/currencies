@@ -2,16 +2,11 @@ package meugeninua.android.currencies.ui.fragments.base.binding;
 
 import android.util.SparseArray;
 import android.view.View;
-
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleObserver;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.OnLifecycleEvent;
+import androidx.lifecycle.*;
 
 import java.lang.ref.WeakReference;
 
