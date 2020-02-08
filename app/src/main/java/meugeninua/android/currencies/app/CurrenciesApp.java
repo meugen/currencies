@@ -50,10 +50,16 @@ public class CurrenciesApp extends Application {
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build();
-        WorkRequest request = new PeriodicWorkRequest.Builder(SyncWorker.class, Constants.SYNC_INTERVAL_SECONDS, TimeUnit.SECONDS)
-                .setConstraints(constraints)
-                .build();
+        PeriodicWorkRequest.Builder builder = new PeriodicWorkRequest.Builder(
+                SyncWorker.class,
+                Constants.SYNC_INTERVAL_SECONDS,
+                TimeUnit.SECONDS
+        );
         WorkManager workManager = getAppComponent().workManager.get();
-        workManager.enqueue(request);
+        workManager.enqueueUniquePeriodicWork(
+                "sync-currencies-work",
+                ExistingPeriodicWorkPolicy.KEEP,
+                builder.setConstraints(constraints).build()
+        );
     }
 }
