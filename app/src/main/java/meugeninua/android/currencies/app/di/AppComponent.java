@@ -69,6 +69,13 @@ public class AppComponent {
         return context;
     }
 
+    public void initWorkManager() {
+        Configuration configuration = new Configuration.Builder()
+                .setWorkerFactory(new InjectWorkerFactory(this))
+                .build();
+        WorkManager.initialize(context, configuration);
+    }
+
     public <VM extends ViewModel> VM provideViewModel(
             final Fragment fragment, final Class<VM> clazz) {
         return new ViewModelProvider(fragment, viewModelFactory.get()).get(clazz);
@@ -76,10 +83,6 @@ public class AppComponent {
 
     @NonNull
     private WorkManager createWorkManager() {
-        Configuration configuration = new Configuration.Builder()
-                .setWorkerFactory(new InjectWorkerFactory(this))
-                .build();
-        WorkManager.initialize(context, configuration);
         return WorkManager.getInstance(context);
     }
 

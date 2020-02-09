@@ -67,15 +67,16 @@ public class SyncWorker extends Worker implements Injector, Constants {
             List<ContentProviderOperation> operations = processCall(httpClient.newCall(request));
             ContentResolver resolver = getApplicationContext().getContentResolver();
             resolver.applyBatch(AUTHORITY, Utils.toArrayList(operations));
-            showNotification();
+            showNotification("Sync is done");
             return Result.success();
         } catch (Exception e) {
+            showNotification("Error");
             Log.e(TAG, e.getMessage(), e);
             return Result.retry();
         }
     }
 
-    private void showNotification() {
+    private void showNotification(String title) {
         final Context context = getApplicationContext();
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -85,7 +86,7 @@ public class SyncWorker extends Worker implements Injector, Constants {
         }
 
         Notification notification = new NotificationCompat.Builder(context, "sync")
-                .setContentTitle("Sync is done")
+                .setContentTitle(title)
                 .setContentText(DateFormat.getDateTimeInstance().format(new Date()))
                 .setSmallIcon(R.drawable.baseline_done_outline_white_18)
                 .build();

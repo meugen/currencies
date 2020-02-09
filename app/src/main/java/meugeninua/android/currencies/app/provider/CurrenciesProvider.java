@@ -39,6 +39,7 @@ public class CurrenciesProvider extends ContentProvider implements Constants, Co
 
     @Override
     public void inject(final AppComponent appComponent) {
+        appComponent.initWorkManager();
         this.database = appComponent.database.get();
     }
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import androidx.annotation.NonNull;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,25 +21,24 @@ public class CurrenciesOpenHelper extends SQLiteOpenHelper {
 
     private final AssetManager assets;
 
-    public CurrenciesOpenHelper(final Context context) {
+    public CurrenciesOpenHelper(Context context) {
         super(context, NAME, null, VERSION);
         this.assets = context.getAssets();
     }
 
     @Override
-    public void onCreate(final SQLiteDatabase db) {
+    public void onCreate(@NonNull SQLiteDatabase db) {
         onUpgrade(db, 0, VERSION);
     }
 
     @Override
-    public void onUpgrade(final SQLiteDatabase db,
-            final int oldVersion, final int newVersion) {
+    public void onUpgrade(@NonNull SQLiteDatabase db, int oldVersion, int newVersion) {
         for (int version = oldVersion + 1; version <= newVersion; version++) {
             upgrade(db, version);
         }
     }
 
-    private void upgrade(final SQLiteDatabase db, final int version) {
+    private void upgrade(SQLiteDatabase db, int version) {
         final CharSequence content = fetchSql(version);
         final Matcher matcher = Pattern.compile("[^;]+;").matcher(content);
         while (matcher.find()) {
@@ -46,7 +46,7 @@ public class CurrenciesOpenHelper extends SQLiteOpenHelper {
         }
     }
 
-    private CharSequence fetchSql(final int version) {
+    private CharSequence fetchSql(int version) {
         try {
             Reader reader = null;
             try {
