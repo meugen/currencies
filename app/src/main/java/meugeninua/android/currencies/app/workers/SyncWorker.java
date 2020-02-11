@@ -70,7 +70,7 @@ public class SyncWorker extends Worker implements Injector, Constants {
             showNotification("Sync is done");
             return Result.success();
         } catch (Exception e) {
-            showNotification("Error");
+            showNotification(e.getClass().getSimpleName() + " (" + e.getMessage() + ")");
             Log.e(TAG, e.getMessage(), e);
             return Result.retry();
         }
